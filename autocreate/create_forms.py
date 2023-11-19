@@ -16,7 +16,7 @@ for models_path,forms_path in zip(models_paths, forms_paths):
         models_code     = mf.read()
 
         # findall を使って [ "Article","Category"..... ]
-        model_classes   = re.findall(r'class (\w+)\(models\.Model\):', models_code)
+        model_classes   = re.findall(r'class (\w+)\(\w+\.?,?\s?\w+?\):', models_code)
 
         # forms.pyのimport部を作成
         import_models   = ""
@@ -45,7 +45,7 @@ for models_path,forms_path in zip(models_paths, forms_paths):
             print(models_code)
 
             # モデルクラス名を取得
-            model_name  = re.search(r'class (\w+)\(models\.Model\):', models_code)
+            model_name  = re.search(r'class (\w+)\(\w+\.?,?\s?\w+?\):', models_code)
             if model_name:
 
                 # バリデーション対象のフィールドがあれば追加。

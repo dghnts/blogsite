@@ -12,6 +12,7 @@ import uuid
 
 
 #ここ( https://github.com/django/django/blob/main/django/contrib/auth/models.py#L334 )から流用
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     username_validator = UnicodeUsernameValidator()
