@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from django.conf import settings
 
-
+import bs4
 
 class Category(models.Model):
     name = models.CharField(verbose_name="カテゴリ名",max_length=50)
@@ -15,6 +15,9 @@ class ArticleCategory(models.Model):
     
     def articles(self):
         return Article.objects.filter(article_category=self.id)
+    
+    def __str__(self):
+        return self.name
 
 class Tag(models.Model):
     name        = models.CharField(verbose_name="タグ名",max_length=50)
@@ -22,6 +25,9 @@ class Tag(models.Model):
 class ArticleTag(models.Model):
     tag         = models.ForeignKey(Tag,verbose_name="タグ", on_delete=models.CASCADE)
     name        = models.CharField(verbose_name="タグ名",max_length=50)
+
+    def __str__(self):
+        return self.name
 
 
 
@@ -42,9 +48,23 @@ class Article(models.Model):
     
     #記事投稿時はいいねがついていないので、blank=Trueが必須
     good                = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="good_user" , verbose_name="いいね", blank=True)
-
+    
+    def plain_content(self):
+        soup = bs4.BeautifulSoup(self.content, 'html.parser')
+        
+        return soup.get_text()
+    
+    def text_thumbnail(self):
+        soup        = bs4.BeautifulSoup(self.content, 'html.parser')
+        img_elems   = soup.select('img')
+        if len(img_elems) >= 1:
+            return str(img_elems[0])
+        else:
+            return '<img src="/media/images/noimage.png" alt="サムネイル" style="max_width:100%; max-height:10rem;">'
+    
+    
 class GoodArticle(models.Model):
-    dt                  = models.DateTimeField(verbose_name="いいねした日時", default=timezone.now)
+    dt                  = models.DateTimeField(verbose_name="いいねした日時",default=timezone.now)
     article             = models.ForeignKey(Article,verbose_name="記事", on_delete=models.CASCADE)
     user                = models.ForeignKey(settings.AUTH_USER_MODEL,verbose_name="投稿者", on_delete=models.CASCADE)
     

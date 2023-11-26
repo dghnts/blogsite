@@ -34,6 +34,7 @@ INSTALLED_APPS = [
 
     "blog.apps.BlogConfig",
     "users.apps.UsersConfig",
+    "django_summernote",
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -60,7 +61,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [ BASE_DIR / "templates" ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,3 +128,30 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# summernoteで保存する画像の設定
+MEDIA_URL   = "/media/"
+MEDIA_ROOT  = BASE_DIR / "media"
+
+# summernoteの設定(エディタのサイズ調整)
+# https://github.com/summernote/django-summernote
+SUMMERNOTE_CONFIG = { 
+    'summernote': {
+        'width': '100%',
+        'height': '480',
+    }   
+}
+
+# 許可するHTMLタグと属性の指定(XSSに注意。scriptタグとonclick,onsubmitなどの属性は追加厳禁)
+# bleachで判定する
+ALLOWED_TAGS = [ 
+    'a', 'div', 'p', 'span', 'img', 'em', 'i', 'li', 'ol', 'ul', 'strong', 'br',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'table', 'tbody', 'thead', 'tr', 'td',
+    'abbr', 'acronym', 'b', 'blockquote', 'code', 'strike', 'u', 'sup', 'sub','font'
+]
+ATTRIBUTES = { 
+    '*': ['style', 'align', 'title', 'style' ],
+    'a': ['href', ],
+    'img': ['src', ],
+}
