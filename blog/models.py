@@ -8,6 +8,9 @@ import bs4
 class Category(models.Model):
     name = models.CharField(verbose_name="カテゴリ名",max_length=50)
 
+    def __str__(self):
+        return self.name
+
 
 class ArticleCategory(models.Model):
     category    = models.ForeignKey(Category,verbose_name="カテゴリ", on_delete=models.CASCADE)

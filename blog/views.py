@@ -36,7 +36,8 @@ index   = IndexView.as_view()
 class CreateArticleView(LoginRequiredMixin, View):
     def get(self, request, *args, **keargs):
         context = {}
-        context["categories"]   = ArticleCategory.objects.all()
+        context["categories"]           = Category.objects.all()
+        context["article_categories"]   = ArticleCategory.objects.all()
         context["tags"]         = ArticleTag.objects.all()
         
         context["form"]         = ArticleForm()
@@ -70,7 +71,7 @@ class ArticleCategoryOptionCreateView(LoginRequiredMixin, View):
         
         data["error"]   = False
         
-        data["article_categories"]  = list( ArticleCategory.objects.filter(category=form.cleaned_data.get("category")))
+        data["article_categories"]  = list( ArticleCategory.objects.filter(category=form.cleaned_data.get("category")).values("id","name"))
         
         return JsonResponse(data)
 
