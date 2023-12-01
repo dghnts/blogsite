@@ -37,12 +37,11 @@ class CreateArticleView(LoginRequiredMixin, View):
     def get(self, request, *args, **keargs):
         context = {}
         context["categories"]           = Category.objects.all()
-        context["article_categories"]   = ArticleCategory.objects.all()
         context["tags"]         = ArticleTag.objects.all()
         
         context["form"]         = ArticleForm()
         
-        #context["articles"]     = Article.objects.all()
+        context["article_categories"]   = list(ArticleCategory.objects.all().values())
         
         return render(request, "blog/create_article.html", context)
     
@@ -61,7 +60,6 @@ article = ArticleView.as_view()
 
 class ArticleCategoryOptionCreateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        
         data    = { "error": True }
         
         form    = ArticleCategoryOptionForm(request.GET)

@@ -5,7 +5,7 @@ window.addEventListener("load", () => {
 
         category.addEventListener("change", (e) => {
             console.log( e.currentTarget.value );
-
+            
             // urlにカテゴリーのidを設定する
             // formを利用しないので今回はgetメソッド
             let url     = `/article_category_option_create/?category=${e.currentTarget.value}`;
@@ -38,6 +38,7 @@ window.addEventListener("load", () => {
                     }
                 }
             }
+            
         });
     }
 });
