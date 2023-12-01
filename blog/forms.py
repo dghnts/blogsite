@@ -68,3 +68,12 @@ class FollowForm(forms.ModelForm):
         model	= Follow
         fields	= [ "dt", "follower", "followed" ]
 
+class ArticleCategoryOptionForm(forms.ModelForm):
+    class Meta:
+        model   = ArticleCategory
+        fields  = [ "category" ]
+
+class ArticleTagSearchForm(forms.ModelForm):
+    class Meta:
+        model   = Article
+        fields  = [ "article_tag" ]

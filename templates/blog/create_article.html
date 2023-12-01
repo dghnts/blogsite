@@ -1,0 +1,32 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+    <script src="{% static 'blog/js/submit.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="text" name="title" placeholder="タイトル">
+    {# 大カテゴリの検索 #}
+    <select name="category">
+        <option value="">大カテゴリを選んでください</option>
+        {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }} </option>
+        {% endfor %}
+    </select>
+
+    {# TODO: ここで大カテゴリから検索して選べるようにする(Ajax?)#}
+    <select name="article_category">
+        <option value="">カテゴリを指定してください</option>
+    </select>
+    {% for tag in tags %}
+        <label><input type="checkbox" name="article_tag" value="{{ tag.id }}">{{ tag.name }} </label>
+    {% endfor %}
+
+    {{ form.content }}
+
+    <input type="submit" value="送信">
+</form>
+{% endblock %}

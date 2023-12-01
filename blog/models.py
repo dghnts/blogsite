@@ -49,6 +49,9 @@ class Article(models.Model):
     #記事投稿時はいいねがついていないので、blank=Trueが必須
     good                = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="good_user" , verbose_name="いいね", blank=True)
     
+    def __str__(self):
+        return self.title
+    
     def plain_content(self):
         soup = bs4.BeautifulSoup(self.content, 'html.parser')
         

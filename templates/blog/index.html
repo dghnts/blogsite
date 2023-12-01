@@ -4,42 +4,16 @@
 {% endblock %}
 
 {% block main %}
-
-    <p>Hello World</p>
-
-    <form action="" method="post">
-        {% csrf_token %}
-        <input type="text" name="title" placeholder="タイトル">
-        {# TODO: ここで大カテゴリから検索して選べるようにする(Ajax?)#}
-        <select name="article_category">
-            <option value="">カテゴリを指定してください</option>
-            {% for category in categories %}
-                <option value="{{ category.id }}">{{ category.name }} </option>
-            {% endfor %}
-        </select>
-        {% for tag in tags %}
-            <label><input type="checkbox" name="article_tag" value="{{ tag.id }}">{{ tag.name }} </label>
-        {% endfor %}
-
-        {{ form.content }}
-
-        <input type="submit" value="送信">
-    </form>
-
-    <hr>
-
     {% for article in articles %}
-        <div>
+        <a href="{% url 'blog:article' article.id %}">
             <div>{{ article.text_thumbnail|safe }} </div>
-            <div>
-                タイトル： {{ article.title }}
-            </div>
-            <div>
-                投稿日時： {{ article.dt }}
-            </div>
+            <div>タイトル： {{ article.title }}</div>
+            <div>投稿日時： {{ article.dt }}</div>
+            <div>タグ: {% for tag in article.artile_tag.all %}{{ tag.name }} {% endfor %}</div>
+
             {# <div>{{ article.content|safe }} </div> #}
             <div>{{ article.plain_content|truncatechars:100 }} </div>
-        </div>
+        </a>
         <hr>
     {% endfor %}
 

@@ -1,0 +1,13 @@
+{% extends "blog/base.html" %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block main %}
+    <div>
+        <div>タイトル： {{ article.title }}</div>
+        <div>投稿日時： {{ article.dt }}</div>
+        <div>タグ: {% for tag in article.artile_tag.all %}{{ tag.name }} {% endfor %}</div>
+        <div>{{ article.content|safe }} </div>
+    </div>
+{% endblock %}
