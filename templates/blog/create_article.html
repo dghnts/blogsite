@@ -2,7 +2,9 @@
 {% load static %}
 
 {% block extra_head %}
-    {#<script src="{% static 'blog/js/submit.js' %}"></script>#}
+    {# カテゴリ検索(Ajax使用)#}
+    <script src="{% static 'blog/js/submit.js' %}"></script>
+    {# カテゴリ検索(AJax不使用)#}
     <script>
         {% autoescape off %}
             let article_categories_list = {{ article_categories }};
@@ -11,12 +13,12 @@
             const categories    = document.querySelectorAll("[name ='category']");
             for (let category of categories){
                 category.addEventListener("change", (e) => {
-                    console.log( "category_id=" + e.currentTarget.value );
+                    console.log( "category=" + e.currentTarget.value );
                     let html = '<option value="">カテゴリを選択してください</option>'
 
                     for ( let article_category of article_categories_list ){
                         // 選択したcategoryに対応するarticle_categoryの一覧をselectタグに指定する
-                        if(article_category.category_id == e.currentTarget.value){
+                        if(article_category.category == e.currentTarget.value){
                             html += `<option value="${article_category.id}">${article_category.name}</option>`;
                         }
                     }

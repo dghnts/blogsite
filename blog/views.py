@@ -12,8 +12,31 @@ from .forms import CategoryForm,ArticleCategoryForm,TagForm,ArticleTagForm,Artic
 
 class IndexView(View):
     def get(self, request, *args , **kwargs):
+        
         context             = {}
-        context["articles"] = Article.objects.all()
+        query               = Q()
+        
+        #タイトルでの検索機能
+        #検索キーワードが存在するとき，キーワードをlist型として保存する
+        if "search" in request.GET:
+            
+            words   = request.GET["search"].replace("　"," ").split(" ")
+            
+            for word in words:
+                if word == "":
+                    continue
+                
+                qery &= Q(title_contains=word)
+        
+        articles    = Article.objects.filter(query).order_by("-dt")
+        
+        #ページネーションの設定
+        paginator   = Paginator(articles, 5)
+        
+        if "page" in request.GET:
+            context["articles"] = paginator.get_page(request.GET["page"])
+        else:
+            context["articles"] = paginator.get_page(1)
         
         return render(request, "blog/index.html", context)
     
@@ -41,11 +64,20 @@ class CreateArticleView(LoginRequiredMixin, View):
         
         context["form"]         = ArticleForm()
         
-        context["article_categories"]   = list(ArticleCategory.objects.all().values())
+        context["article_categories"]   = list(ArticleCategory.objects.all().values("id","name","category"))
         
         return render(request, "blog/create_article.html", context)
     
     def post(self,request, *args, **kwargs):
+        copied          = request.POST.copy()
+        copied["user"]  = request.user
+        
+        form    = ArticleForm(copied)
+        if form.is_valid():
+            form.save()
+        else:
+            print(form.errors)
+        
         return redirect("blog:index")
 
 create_article = CreateArticleView.as_view()

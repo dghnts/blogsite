@@ -19,9 +19,9 @@
       <nav class="navbar bg-primary" data-bs-theme="dark">
         <div class="container-fluid bg-primary">
           <a class="navbar-brand" href="{% url 'blog:index' %}">ブログサイト</a>
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-dark" type="submit">Search</button>
+          <form class="d-flex" role="search" action="{% url 'blog:index' %}" method="GET">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+            <input class="btn btn-outline-dark" type="submit" value="検索"></button>
           </form>
           <a class="btn btn-outline-dark" href="{% url 'blog:create_article' %}">新規作成</a>
         </div>
