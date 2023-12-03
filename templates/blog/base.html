@@ -1,4 +1,5 @@
 {% load static %}
+{% load param_change %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -9,7 +10,25 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     {#<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">#}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
+    <script>
+      window.addEventListener("load",() =>{
+        //modalのフォームを取得
+        const search_form = document.getElementById("Search_Form");
     
+        //formのsubmitイベントで発火
+        search_form.addEventListener('submit', ()=>{
+          //formのinput要素を処理
+          Array.from(search_form).forEach((input)=>{
+            //値が空の場合
+            if(input.value === ''){
+                //disabledを有効にする
+                input.disabled = true;
+            }
+          });
+        }, false);
+      });
+    </script>
     {% block extra_head %}
     {% endblock %}
 
@@ -19,20 +38,41 @@
       <nav class="navbar bg-primary" data-bs-theme="light">
         <div class="container-fluid bg-primary">
           <a class="navbar-brand me-auto" href="{% url 'blog:index' %}">ブログサイト</a>
-          {% comment%}
           {# 検索用フォームであることをrole属性で明示 https://web-camp.io/magazine/archives/78571#}
-          <form class="d-flex" role="search" action="{% url 'blog:index' %}" method="GET">
-            <div class="input-group">
+          <form class="d-flex" role="search" id="Search_Form" action="{% url 'blog:index' %}" method="GET">
+            <div class="input-group me-2">
               <button type="submit" class="btn input-group-text">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
                 </svg>
               </button>
-              <input type="search" class="form-control" placeholder="タイトル検索" aria-label="Search" name="title_search">
+              <input type="search" class="form-control" placeholder="タイトル検索" aria-label="Search" name="title_search" value={% if "title_search" in request.GET %}{% set_keywords request %}{% else %} "" {% endif %}>
+            </div>
+            <div class="me-2">
+              <select class="form-control" id="Article_Category_Search" name="article_category" style="width:fit-content">
+                <option value="">記事カテゴリ</option>
+                {# 各カテゴリの値を表示 #}
+                {# TODO:検索後、検索されたカテゴリが選択された状態にする #}
+                {% for article_category in Article_Categories %}
+                    <option value="{{ article_category.id }}" {% category_selected request article_category.id %}>{{ article_category.name }} </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="btn-group">
+              <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
+                タグ
+              </button>
+              <ul class="dropdown-menu">
+                {% for article_tag in Article_Tags %}
+                  <li>
+                    <input type="checkbox" id="{{ article_tag.id}}" name="article_tag" value="{{ article_tag.id }}" {% tag_checked request article_tag.id %}> <label for="{{ article_tag.id}}">{{ article_tag.name }}</label>
+                  </li>
+                {% endfor %}
+              </ul>
             </div>
           </form>
-          {% endcomment %}
           {# modalの設定 https://getbootstrap.jp/docs/5.3/components/modal/#}
+          {% comment %}
           <a class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#Search_Modal">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
@@ -47,7 +87,7 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <form role="search" action="{% url "blog:index" %}" method="GET">
+                  <form role="search" id="Search_Form" action="{% url "blog:index" %}" method="GET">
                     <div class="row mb-2 align-items-center">
                       <div class="col-auto me-auto">
                         <label for="Title_Search" class="col-form-label" >タイトル</label>
@@ -56,21 +96,6 @@
                         <input type="search" id="Title_Search" class="form-control" placeholder="タイトル検索" aria-label="Title_Search" name="title_search">
                       </div>
                     </div>
-                    {% comment %}
-                    <div class="row mb-2 align-items-center">
-                      <div class="col-1">
-                        <label for="Category_Search" class="col-form-label">カテゴリ</label>
-                      </div>
-                      <div class="col-auto">
-                        <select class="form-control" id="Category_Search" name="category_search">
-                          <option value="">大カテゴリを選んでください</option>
-                          {% for category in Categories %}
-                              <option value="{{ category.id }}">{{ category.name }} </option>
-                          {% endfor %}
-                        </select>
-                      </div>
-                    </div>
-                    {% endcomment %}
                     <div class="row mb-2 align-items-center">
                       <div class="col-auto me-auto">
                         <label for="Article_Category_Search" class="col-form-label">記事カテゴリ</label>
@@ -86,22 +111,23 @@
                     </div>
                     <div class="row mb-2 align-items-center">
                       <div class="col-auto me-auto">
-                        <label for="Article_Category_Search" class="col-form-label">タグ</label>
+                        <label for="Article_Tag_Search" class="col-form-label">タグ</label>
                       </div>
                       <div class="col-auto">
                         {% for article_tag in Article_Tags %}
-                          <input type="checkbox" id="{{ article_tag.id}}"> <label for="{{ article_tag.id}}">{{ article_tag.name }}</label>
+                          <input type="checkbox" id="{{ article_tag.id}}" name="article_tag" value="{{ article_tag.id }}"> <label for="{{ article_tag.id}}">{{ article_tag.name }}</label>
                         {% endfor %}
                       </div>
                     </div>                    
-                    <div class="modal-footer">
-                      <button type="submit" class="btn btn-primary">検索</button>
-                    </div>
                   </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" form="Search_Form" class="btn btn-primary">検索</button>
                 </div>
               </div>
             </div>
           </div>
+          {% endcomment %}
           <a class="btn btn-success mx-2" href="{% url 'blog:create_article' %}">新規作成</a>
         </div>
       </nav>
@@ -111,4 +137,5 @@
 
     <a class="" href=""></a>
 </body>
+
 </html>

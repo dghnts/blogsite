@@ -27,4 +27,6 @@
     - [ ] 詳細検索機能の実装
         - [x] modalの作成
         - [x] カテゴリ検索機能の実装 [(参考：Djangoでクエリビルダを使い、スペース区切りの文字列検索と絞り込みを同時に行う【JSとカスタムテンプレートタグを使用】)](https://noauto-nolife.com/post/django-search-querybuilder-custom-templates-js/)
-        - [ ] タグ検索機能の実装
+        - [x] タグ検索機能の実装
+        - [x] GETメソッドで空のパラメータを送信しない [【JavaScript】formのGETメソッドで空のinputパラメータを送信しないようにする](https://into-the-program.com/javascript-dont-submit-empty-input-parameter-get-method-form/) 
+        - [x] 検索機能のレイアウトを変更

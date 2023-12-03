@@ -5,13 +5,39 @@
 {% endblock %}
 
 {% block main %}
+    {% comment %}
+    {% if search %}
+        {% if  search_title %}
+            <div class="row mb-2 align-items-center">
+                <div class="col-auto me-auto">タイトル</div>
+                <div class="col-auto">{% for word in search_title %}{{ word }}{% endfor %}</div>
+            </div>
+        {% endif %}
+        {% if search_category %}
+            <div class="row mb-2 align-items-center">
+                <div class="col-auto me-auto">記事カテゴリ</div>
+                <div class="col-auto">{{ search_category }}</div>
+            </div>
+        {% endif %}
+        {% if search_tags %}
+            <div class="row mb-2 align-items-center">
+                <div class="col-auto me-auto">タグ</div>
+                <div class="col-auto">
+                    {% for article_tag in Article_Tags %}
+                        <input type="checkbox" id="{{ article_tag.id}}" name="article_tag" disabled value="{{ article_tag.id }}" {% tag_checked request article_tag.id %}> {{ article_tag.name }}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+    {% endcomment %}
     {% for article in articles %}
         <a href="{% url 'blog:article' article.id %}">
             <div>{{ article.text_thumbnail|safe }} </div>
             <div>タイトル： {{ article.title }}</div>
             <div>投稿日時： {{ article.dt }}</div>
             <div>カテゴリ： {{ article.article_category.name }}</div>
-            <div>タグ: {% for tag in article.artile_tag.all %}{{ tag.name }} {% endfor %}</div>
+            <div>タグ: {% for tag in article.article_tag.all %} {{ tag.name }} {% endfor %}</div>
 
             {# <div>{{ article.content|safe }} </div> #}
             <div>{{ article.plain_content|truncatechars:100 }} </div>
