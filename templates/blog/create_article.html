@@ -39,7 +39,7 @@
     {# 大カテゴリの検索 #}
     <select name="category">
         <option value="">大カテゴリを選んでください</option>
-        {% for category in categories %}
+        {% for category in Categories %}
             <option value="{{ category.id }}">{{ category.name }} </option>
         {% endfor %}
     </select>

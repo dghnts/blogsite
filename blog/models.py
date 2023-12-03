@@ -22,11 +22,11 @@ class ArticleCategory(models.Model):
     def __str__(self):
         return self.name
 
-class Tag(models.Model):
-    name        = models.CharField(verbose_name="タグ名",max_length=50)
+#class Tag(models.Model):
+#    name        = models.CharField(verbose_name="タグ名",max_length=50)
 
 class ArticleTag(models.Model):
-    tag         = models.ForeignKey(Tag,verbose_name="タグ", on_delete=models.CASCADE)
+    #tag         = models.ForeignKey(Tag,verbose_name="タグ", on_delete=models.CASCADE)
     name        = models.CharField(verbose_name="タグ名",max_length=50)
 
     def __str__(self):

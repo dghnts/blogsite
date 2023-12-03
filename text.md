@@ -19,4 +19,12 @@
     - [x] context_processorの実装
     - [ ] index viewに検索機能を実装する（検索した内容はindexで処理される（
     - [x] ページネーションの実装 
-- [x] 
+
+### 12月3日
+- [x] タグの削除<= article_tagだけで十分な気がする
+- [ ] 検索ウインドウの変更 <=　タイトル検索と詳細検索に変更
+-[x] タイトル検索機能の実装
+    - [ ] 詳細検索機能の実装
+        - [x] modalの作成
+        - [x] カテゴリ検索機能の実装 [(参考：Djangoでクエリビルダを使い、スペース区切りの文字列検索と絞り込みを同時に行う【JSとカスタムテンプレートタグを使用】)](https://noauto-nolife.com/post/django-search-querybuilder-custom-templates-js/)
+        - [ ] タグ検索機能の実装

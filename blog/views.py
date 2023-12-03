@@ -7,8 +7,8 @@ from django.http.response import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 
-from .models import Category,ArticleCategory,Tag,ArticleTag,Article,GoodArticle,Follow
-from .forms import CategoryForm,ArticleCategoryForm,TagForm,ArticleTagForm,ArticleForm,GoodArticleForm,FollowForm,ArticleCategoryOptionForm
+from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,Follow
+from .forms import CategoryForm,ArticleCategoryForm,ArticleTagForm,ArticleForm,GoodArticleForm,FollowForm,ArticleCategorySearchForm,ArticleCategoryOptionForm,ArticleTagSearchForm
 
 class IndexView(View):
     def get(self, request, *args , **kwargs):
@@ -16,19 +16,38 @@ class IndexView(View):
         context             = {}
         query               = Q()
         
+        # 検索内容に応じて絞り込みを行う https://noauto-nolife.com/post/django-or-and-search/
+        # https://noauto-nolife.com/post/django-search-querybuilder-custom-templates-js/
         #タイトルでの検索機能
         #検索キーワードが存在するとき，キーワードをlist型として保存する
-        if "search" in request.GET:
+        if "title_search" in request.GET:
             
-            words   = request.GET["search"].replace("　"," ").split(" ")
+            raw_words   = request.GET["title_search"].replace("　"," ").split(" ")
             
-            for word in words:
-                if word == "":
-                    continue
-                
-                qery &= Q(title_contains=word)
-        
+            words = [ w for w in raw_words if w != ""]
+            
+            for w in words:
+                query &= Q(title__contains=w)
+
+        #カテゴリ検索ありの時、queryに追加する。
+        article_category_search_form    = ArticleCategorySearchForm(request.GET)
+
+        if article_category_search_form.is_valid():
+            cleaned     = article_category_search_form.clean()
+            
+            query &= Q(article_category=cleaned["article_category"].id)
+            
         articles    = Article.objects.filter(query).order_by("-dt")
+        
+        #　Tag検索ありのとき，queryに条件を追加する
+        article_tag_search_form = ArticleTagSearchForm(request.GET)
+        
+        if article_tag_search_form.is_valid():
+            cleaned          = article_tag_search_form.clean()
+            selected_tags   = cleaned[ "article_tag" ]
+            
+            for tag in selected_tags:
+                articles    = [ article for article in articles if tag in article.article_tag.all() ]
         
         #ページネーションの設定
         paginator   = Paginator(articles, 5)

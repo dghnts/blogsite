@@ -5,7 +5,7 @@ from django import forms
 from django_summernote.widgets import SummernoteWidget
 from django.conf import settings
 
-from .models import Category,ArticleCategory,Tag,ArticleTag,Article,GoodArticle,ArticleChat,Follow
+from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,ArticleChat,Follow
 
 import bleach
 
@@ -35,16 +35,17 @@ class ArticleCategoryForm(forms.ModelForm):
     class Meta:
         model	= ArticleCategory
         fields	= [ "category", "name" ]
-
+'''
 class TagForm(forms.ModelForm):
     class Meta:
         model	= Tag
         fields	= [ "name" ]
+'''
 
 class ArticleTagForm(forms.ModelForm):
     class Meta:
         model	= ArticleTag
-        fields	= [ "tag", "name" ]
+        fields	= [ "name" ]
 
 class ArticleForm(forms.ModelForm):
     class Meta:
@@ -72,6 +73,19 @@ class ArticleCategoryOptionForm(forms.ModelForm):
     class Meta:
         model   = ArticleCategory
         fields  = [ "category" ]
+
+##################検索関連のフォーム#############################################
+'''
+class CategorySearchForm(forms.ModelForm):
+    class Meta:
+        model   = Article
+        fields  = [ "category"]
+'''
+
+class ArticleCategorySearchForm(forms.ModelForm):
+    class Meta:
+        model   = Article
+        fields  = [ "article_category" ]
 
 class ArticleTagSearchForm(forms.ModelForm):
     class Meta:
