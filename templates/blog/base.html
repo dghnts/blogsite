@@ -37,16 +37,16 @@
     <header>        
       <nav class="navbar bg-primary" data-bs-theme="light">
         <div class="container-fluid bg-primary">
-          <a class="navbar-brand me-auto" href="{% url 'blog:index' %}">ブログサイト</a>
+          <a class="navbar-brand text-light" href="{% url 'blog:index' %}">ブログサイト</a>
           {# 検索用フォームであることをrole属性で明示 https://web-camp.io/magazine/archives/78571#}
           <form class="d-flex" role="search" id="Search_Form" action="{% url 'blog:index' %}" method="GET">
             <div class="input-group me-2">
-              <button type="submit" class="btn input-group-text">
+              <button type="submit" class="btn btn-outline-dark input-group-text">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
                 </svg>
               </button>
-              <input type="search" class="form-control" placeholder="タイトル検索" aria-label="Search" name="title_search" value={% if "title_search" in request.GET %}{% set_keywords request %}{% else %} "" {% endif %}>
+              <input type="search" class="form-control" placeholder="タイトル検索" aria-label="Search" name="title_search" maxlength=100 value="{% if "title_search" in request.GET %}{% set_keywords request %}{% else %} "" {% endif %}"">
             </div>
             <div class="me-2">
               <select class="form-control" id="Article_Category_Search" name="article_category" style="width:fit-content">

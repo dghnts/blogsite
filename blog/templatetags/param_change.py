@@ -10,15 +10,7 @@ def url_replace(request, key, value):
 
 @register.simple_tag()
 def set_keywords(request):
-    keywords_list = request.GET.getlist("title_search")
-    
-    keywords = ""
-    for keyword in keywords_list:
-        keywords += keyword + " "
-    
-    keywords = keywords.rstrip()
-    print(keywords)
-    return keywords
+    return request.GET.get("title_search")
 
 @register.simple_tag()
 def category_selected(request,category_id):

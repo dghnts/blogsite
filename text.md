@@ -30,3 +30,7 @@
         - [x] タグ検索機能の実装
         - [x] GETメソッドで空のパラメータを送信しない [【JavaScript】formのGETメソッドで空のinputパラメータを送信しないようにする](https://into-the-program.com/javascript-dont-submit-empty-input-parameter-get-method-form/) 
         - [x] 検索機能のレイアウトを変更
+
+### 12月4日
+- [x] タイトル検索機能のバグを修正（検索keywordが半角スペースで途切れる問題）
+- [ ] 
