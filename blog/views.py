@@ -30,9 +30,6 @@ class IndexView(View):
             for w in words:
                 query &= Q(title__contains=w)
             
-            # 検索キーワードを検索語のページに表示する    
-            # context["search_title"] = [ *words ]
-            
             search = True
             
         #カテゴリ検索ありの時、queryに追加する。
@@ -43,9 +40,6 @@ class IndexView(View):
             
             query &= Q(article_category=cleaned["article_category"].id)
             
-            # 検索したカテゴリをtemplateに渡す
-            # context["search_category"] = cleaned["article_category"].name
-            # search = True
             
         articles    = Article.objects.filter(query).order_by("-dt")
         
@@ -60,11 +54,6 @@ class IndexView(View):
                 for tag in selected_tags:
                     articles    = [ article for article in articles if tag in article.article_tag.all() ]
                 
-                #context["search_tags"] = [ tag.id  for tag in selected_tags]
-                #print(context["search_tags"])
-                search = True
-                
-        context["search"] = search
         #ページネーションの設定
         paginator   = Paginator(articles, 5)
         
