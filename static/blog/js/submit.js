@@ -1,8 +1,10 @@
-window.addEventListener("load", () => {
+window.addEventListener("load" , () => {
 
-    const categories    = document.querySelectorAll("[name ='category']");
+    
+    const categories    = document.querySelectorAll("[name='category']");
+    console.log(categories);
     for (let category of categories){
-
+        console.log(category)
         category.addEventListener("change", (e) => {
             console.log( e.currentTarget.value );
             
@@ -11,7 +13,7 @@ window.addEventListener("load", () => {
             let url     = `/article_category_option_create/?category=${e.currentTarget.value}`;
             let method  = "get";
 
-            const request  = new XMLHttpRequest();
+            const request = new XMLHttpRequest();
             
             request.open(method,url);
 
@@ -31,14 +33,25 @@ window.addEventListener("load", () => {
                             html += `<option value="${article_category.id}">${article_category.name}</option>`;
                         }
 
-                        const article_categories    = document.querySelectorAll("[name='article_category'");
+                        const article_categories    = document.querySelectorAll("#article_category");
                         for ( let article_category of article_categories){
                             article_category.innerHTML = html;
                         }
+
                     }
                 }
             }
             
         });
+
+
     }
+
+
+
+
+
+
+
+
 });
