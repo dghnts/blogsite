@@ -1,0 +1,28 @@
+{% extends "blog/base.html" %}
+{% load param_change %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block main %}
+    <h2>{{ user.username }}のページ</h2>
+
+    {% if request.user != user %}
+        <form action="{% url 'blog:follow' user.id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="{% follow_checked request user.id %}">
+            {#<input type="submit" value={% if not is_follow %}"フォロー"{%else%}"フォロー解除"{% endif %}>#}
+        </form>
+    {% endif %}
+    
+
+    <h3>フォロー中</h3>
+    {% for following_object in request.user.following_user.all %}
+        {{ following_object.followers.username }}
+    {% endfor %}
+    
+    <h3>フォロワー</h3>
+    {% for followed_object in request.user.followed_user.all %}
+        {{ followed_object.follows.username }}
+    {% endfor %}
+{% endblock %}

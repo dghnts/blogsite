@@ -1,0 +1,34 @@
+{% extends "blog/base.html" %}
+{% load param_change %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block main %}
+    <h2>{{ request.user }}のマイページ</h2>
+
+    <h3>フォロー中</h3>
+    {% for following_object in request.user.following_user.all %}
+        <div class="d-inline-flex">
+            <a class="me-2" href="{% url 'blog:userpage'  following_object.followers.id %}">{{ following_object.followers.username }}</a>
+
+            <form action="{% url 'blog:follow' following_object.followers.id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="{% follow_checked request following_object.followers %}">
+            </form>
+        </div>
+        
+    {% endfor %}
+    
+    <h3>フォロワー</h3>
+    {% for followed_object in request.user.followed_user.all %}
+        <div class="d-flex">
+            <a class="me-2" href="{% url 'blog:userpage' followed_object.follows.id %}">{{ followed_object.follows.username }}</a>
+
+            <form action="{% url 'blog:follow' followed_object.follows.id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="{% follow_checked request followed_object.follows %}">
+            </form>
+        </div>
+    {% endfor %}
+{% endblock %}

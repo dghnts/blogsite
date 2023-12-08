@@ -33,8 +33,8 @@
 
 </head>
 <body>
-    <header>        
-      <nav class="navbar bg-primary" data-bs-theme="light">
+    <header class="bg-primary">        
+      <nav class="navbar" data-bs-theme="light">
         <div class="container-fluid bg-primary">
           <a class="navbar-brand text-light" href="{% url 'blog:index' %}">ブログサイト</a>
           {# 検索用フォーム #}
@@ -78,6 +78,14 @@
           <a class="btn btn-success mx-2" href="{% url 'blog:create_article' %}">新規作成</a>
         </div>
       </nav>
+      <div class="text-center">
+        {# TODO:新着順に記事を表示 #}
+        <a class="me-2 text-white" href="">TimeLine</a>
+        {% if request.user.is_authenticated %}
+          {# TODO:フォローしているユーザーが作成した記事を表示 #}
+          <a class="me-2 text-white" href="">Following</a>
+        {% endif %}
+      </div>  
     </header>
     {% block main %}
     {% endblock %}

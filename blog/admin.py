@@ -28,7 +28,7 @@ class ArticleChatAdmin(admin.ModelAdmin):
     list_display	= [ "dt", "article", "chat", "user" ]
 
 class FollowAdmin(admin.ModelAdmin):
-    list_display	= [ "dt", "follower", "followed" ]
+    list_display	= [ "dt", "follows", "followers" ]
 
 
 admin.site.register(Category,CategoryAdmin)

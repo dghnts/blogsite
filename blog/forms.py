@@ -57,17 +57,17 @@ class ArticleForm(forms.ModelForm):
 class GoodArticleForm(forms.ModelForm):
     class Meta:
         model	= GoodArticle
-        fields	= [ "dt", "article", "user" ]
+        fields	= [ "article", "user" ]
 
 class ArticleChatForm(forms.ModelForm):
     class Meta:
         model	= ArticleChat
-        fields	= [ "dt", "article", "chat", "user" ]
+        fields	= [ "article", "chat", "user" ]
 
 class FollowForm(forms.ModelForm):
     class Meta:
         model	= Follow
-        fields	= [ "dt", "follower", "followed" ]
+        fields	= [ "follows", "followers" ]
 
 class ArticleCategoryOptionForm(forms.ModelForm):
     class Meta:

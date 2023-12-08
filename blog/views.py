@@ -10,6 +10,9 @@ from django.db.models import Q
 from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,Follow
 from .forms import CategoryForm,ArticleCategoryForm,ArticleTagForm,ArticleForm,GoodArticleForm,FollowForm,ArticleCategorySearchForm,ArticleCategoryOptionForm,ArticleTagSearchForm
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 class IndexView(View):
     def get(self, request, *args , **kwargs):
         
@@ -132,3 +135,53 @@ class ArticleCategoryOptionCreateView(LoginRequiredMixin, View):
         return JsonResponse(data)
 
 article_category_option_create  = ArticleCategoryOptionCreateView.as_view()
+
+class MyPageView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        
+        return render(request,"blog/mypage.html")
+
+mypage = MyPageView.as_view()
+
+class UserView(View):
+    def get(self, request, pk, *args, **kwargs):
+        
+        context             = {}
+        
+        context["user"]     = User.objects.filter(id=pk).first()
+        
+        # ログインしているユーザーが該当ユーザーをフォローしているか判定するフラグ
+        if Follow.objects.filter(follows=request.user, followers=pk).first() in request.user.following_user.all():
+            context["is_follow"] = True
+        else:
+            context["is_follow"] = False
+            
+        return render(request, "blog/user.html", context)
+
+userpage   = UserView.as_view()
+
+class FollowView(View):
+    
+    def post(self, request, pk, *args, **kwargs):
+        
+        follow  = Follow.objects.filter(follows=request.user, followers=pk)
+        
+        if follow:
+            print("フォロー解除")
+            follow.delete()
+        else:
+            dic                 = {}
+            dic["follows"]      = request.user
+            dic["followers"]    = pk
+            
+            form    = FollowForm(dic)
+            
+            if form.is_valid():
+                print("フォローする")
+                form.save()
+            else:
+                print(form.errors)
+        
+        return redirect("blog:userpage", pk=pk )
+
+follow  = FollowView.as_view()

@@ -85,13 +85,12 @@ class Follow(models.Model):
 
     # 重複したフォローを防ぐ
     class Meta:
-        unique_together = ('follower', 'followed')
+        unique_together = ('follows', 'followers')
 
 
     dt          = models.DateTimeField(verbose_name="フォローした日時",default=timezone.now)
     # 同じCustomUserと1対多とするため、related_name="" の指定が必須。
-    follower    = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='following', on_delete=models.CASCADE)
-    followed    = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='followers', on_delete=models.CASCADE)
-    
+    follows     = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="フォローする（した）ユーザー", related_name='following_user', on_delete=models.CASCADE)
+    followers   = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="フォローされる（された）ユーザー", related_name='followed_user', on_delete=models.CASCADE) 
 
 
