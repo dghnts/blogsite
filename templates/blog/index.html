@@ -9,6 +9,8 @@
         <a href="{% url 'blog:article' article.id %}">
             <div>{{ article.text_thumbnail|safe }} </div>
             <div>タイトル： {{ article.title }}</div>
+            <div>執筆者： {{ article.user }}</div>
+
             <div>投稿日時： {{ article.dt }}</div>
             <div>カテゴリ： {{ article.article_category.name }}</div>
             <div>タグ: {% for tag in article.article_tag.all %} {{ tag.name }} {% endfor %}</div>

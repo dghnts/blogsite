@@ -1,13 +1,28 @@
 {% extends "blog/base.html" %}
+{% load param_change %}
 
 {% block extra_head %}
 {% endblock %}
 
 {% block main %}
-    <div>
-        <div>タイトル： {{ article.title }}</div>
-        <div>投稿日時： {{ article.dt }}</div>
-        <div>タグ: {% for tag in article.artile_tag.all %}{{ tag.name }} {% endfor %}</div>
-        <div>{{ article.content|safe }} </div>
-    </div>
+    <div class="row w-100">
+        <div class="col-10">
+            <div>タイトル： {{ article.title }}</div>
+            <div>投稿日時： {{ article.dt }}</div>
+            <div>執筆者： {{ article.user }}</div>
+            <div>タグ: {% for tag in article.artile_tag.all %}{{ tag.name }} {% endfor %}</div>
+            <div>{{ article.content|safe }} </div>
+        </div>
+        <div class="col-2">
+            <div class="mb-2">
+                {{ article.user }}
+            </div>
+            {% if request.user != article.user %}
+                <form action="{% url 'blog:follow' user.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="{% follow_checked request user.id %}">
+                    {#<input type="submit" value={% if not is_follow %}"フォロー"{%else%}"フォロー解除"{% endif %}>#}
+                </form>
+            {% endif %}
+        </div>
 {% endblock %}
