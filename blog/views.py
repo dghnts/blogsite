@@ -85,10 +85,26 @@ class IndexView(View):
 
 index   = IndexView.as_view()
 
+class FollowingTimeLineView(View):
+    def get(self, request, *args, **kwargs):
+        context                 = {}
+        followers_artciles_list = [] 
+        
+        for follow_object in  request.user.following_user.all():
+            follower = follow_object.followers.id
+            articles = Article.objects.filter(user=follower)
+            followers_artciles_list.extend(articles)
+            
+        context["articles"]   = followers_artciles_list
+        
+        return render(request, "blog/index.html", context)
+
+following = FollowingTimeLineView.as_view()
+        
 class CreateArticleView(LoginRequiredMixin, View):
     def get(self, request, *args, **keargs):
-        context = {}
-        context["categories"]           = Category.objects.all()
+        context                 = {}
+        context["categories"]   = Category.objects.all()
         context["tags"]         = ArticleTag.objects.all()
         
         context["form"]         = ArticleForm()

@@ -83,7 +83,7 @@
         <a class="me-2 text-white" href="">TimeLine</a>
         {% if request.user.is_authenticated %}
           {# TODO:フォローしているユーザーが作成した記事を表示 #}
-          <a class="me-2 text-white" href="">Following</a>
+          <a class="me-2 text-white" href="{% url "blog:following" %}">Following</a>
         {% endif %}
       </div>  
     </header>
