@@ -18,9 +18,9 @@
                 {{ article.user }}
             </div>
             {% if request.user != article.user %}
-                <form action="{% url 'blog:follow' user.id %}" method="post">
+                <form action="{% url 'blog:follow' article.user.id %}" method="post">
                     {% csrf_token %}
-                    <input type="submit" value="{% follow_checked request user.id %}">
+                    <input type="submit" value="{% follow_checked request article.user.id %}">
                     {#<input type="submit" value={% if not is_follow %}"フォロー"{%else%}"フォロー解除"{% endif %}>#}
                 </form>
             {% endif %}

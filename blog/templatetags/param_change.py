@@ -9,8 +9,6 @@ def url_replace(request, key, value):
     copied[key] = value
     return copied.urlencode()
 
-###フォローの確認################################
-
 ###検索処理に関するタグ##########################
 @register.simple_tag()
 def set_keywords(request):
