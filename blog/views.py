@@ -166,7 +166,7 @@ class UserView(LoginRequiredMixin, View):
         
         context             = {}
         
-        context["user"]     = User.objects.filter(id=pk).first()
+        context["person"]     = User.objects.filter(id=pk).first()
         
         # ログインしているユーザーが該当ユーザーをフォローしているか判定するフラグ
         if Follow.objects.filter(follows=request.user, followers=pk).first() in request.user.following_user.all():

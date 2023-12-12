@@ -5,24 +5,24 @@
 {% endblock %}
 
 {% block main %}
-    <h2>{{ user.username }}のページ</h2>
+    <h2>{{ person.username }}のページ</h2>
 
-    {% if request.user != user %}
-        <form action="{% url 'blog:follow' user.id %}" method="post">
+    {% if request.user != person %}
+        <form action="{% url 'blog:follow' person.id %}" method="post">
             {% csrf_token %}
-            <input type="submit" value="{% follow_checked request user.id %}">
+            <input type="submit" value="{% follow_checked request person.id %}">
             {#<input type="submit" value={% if not is_follow %}"フォロー"{%else%}"フォロー解除"{% endif %}>#}
         </form>
     {% endif %}
     
 
     <h3>フォロー中</h3>
-    {% for following_object in user.following_user.all %}
+    {% for following_object in person.following_user.all %}
     <a class="me-2" href={% if request.user != following_object.followers %} "{% url 'blog:userpage' following_object.followers.id %}" {% else %} "{% url 'blog:mypage' %}" {% endif %}>{{ following_object.followers.username }}</a>
     {% endfor %}
     
     <h3>フォロワー</h3>
-    {% for followed_object in user.followed_user.all %}
+    {% for followed_object in person.followed_user.all %}
     <a class="me-2" href={% if request.user != followed_object.follows %} "{% url 'blog:userpage' followed_object.follows.id %}" {% else %} "{% url 'blog:mypage' %}" {% endif %}>{{ followed_object.follows.username }}</a>
     {% endfor %}
 {% endblock %}
