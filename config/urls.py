@@ -20,10 +20,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include("blog.urls")),
+    path('', include('blog.urls')),
     
     #https://github.com/summernote/django-summernote
-    path('summernote', include('django_summernote.urls')),
+    path('summernote/', include('django_summernote.urls')),
+    path('accounts/', include('users.urls')),
 ]
 
 if settings.DEBUG:

@@ -52,3 +52,18 @@
 - [x] followユーザーの記事一覧ページを作成
 - [x] 記事一覧にユーザー名を表示
 - [x] 記事ページにユーザーを表示
+
+### 12月15日
+- [x] FollowingTimeLineViewにページネーションを実装 
+
+### 12月16日
+- [x] userの認証機能を変更（user名ではなくemailでログインに変更）
+[all-authを用いない認証機能の実装](https://noauto-nolife.com/post/django-auth-not-allauth-add-custom-user-model/)
+- [x] DBの修正（emialを設定していないため設定されているものに変更） [DBに格納したデータをダンプする](https://noauto-nolife.com/post/django-dumpdata/)
+
+### 12月17日
+- [x] templates/registrationの作成
+- [x] [ログイン時のメール送信機能の実装](https://noauto-nolife.com/post/django-login-mail-by-signal/)
+- [x] ログイン・ログアウトのリンクを作成 
+- [x] ログアウト時のリダイレクトURLを変更(indexpageに移動)
+- []

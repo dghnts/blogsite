@@ -44,6 +44,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+#DEBUGがTrueのとき、メールの内容は全て端末に表示させる
+if DEBUG:
+    EMAIL_BACKEND   = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND       = "sendgrid_backend.SendgridBackend"
+    DEFAULT_FROM_EMAIL  = "example@example.com" # Sendgrid送信用のメールアドレス。
+    SENDGRID_API_KEY    = "ここにsendgridのAPIkeyを記述する" # 環境変数でも可
+    SENDGRID_SANDBOX_MODE_IN_DEBUG = False
+
+
+LOGIN_REDIRECT_URL  = "/"
+LOGOUT_REDIRECT_URL = "/" 
+
 AUTH_USER_MODEL = 'users.CustomUser'
 ACCOUNT_FORMS   = { "signup":"users.forms.SignupForm"}
 

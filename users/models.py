@@ -33,7 +33,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     first_name  = models.CharField(_("first name"), max_length=150, blank=True)
     last_name   = models.CharField(_("last name"), max_length=150, blank=True)
-    email       = models.EmailField(_("email address"), blank=True)
+    email       = models.EmailField(_("email address"), unique=True)
     is_staff    = models.BooleanField(
         _("staff status"),
         default =False,
@@ -52,8 +52,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects     = UserManager()
 
     EMAIL_FIELD = "email"
-    USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ["email"]
+    # USERNAME_FIELDとREQUIRED_FIELDSは重複させない
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     class Meta:
         verbose_name = _("user")
