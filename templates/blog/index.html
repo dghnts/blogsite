@@ -5,37 +5,46 @@
 {% endblock %}
 
 {% block main %}
-    {% for article in articles %}
-        <a href="{% url 'blog:article' article.id %}">
-            <div>{{ article.text_thumbnail|safe }} </div>
-            <div>タイトル： {{ article.title }}</div>
-            <div>執筆者： {{ article.user }}</div>
-
-            <div>投稿日時： {{ article.dt }}</div>
-            <div>カテゴリ： {{ article.article_category.name }}</div>
-            <div>タグ: {% for tag in article.article_tag.all %} {{ tag.name }} {% endfor %}</div>
-
-            {# <div>{{ article.content|safe }} </div> #}
-            <div>{{ article.plain_content|truncatechars:100 }} </div>
-        </a>
-        <hr>
-    {% endfor %}
-
+    <div class="row">
+        <div class="col-10">
+            {% for article in articles %}
+                <a href="{% url 'blog:article' article.id %}">
+                    <div>{{ article.text_thumbnail|safe }} </div>
+                    <div>タイトル： {{ article.title }}</div>
+                    <div>執筆者： {{ article.user }}</div>
+                    <div>投稿日時： {{ article.dt }}</div>
+                    <div>カテゴリ： {{ article.article_category.name }}</div>
+                    <div>タグ: {% for tag in article.article_tag.all %} {{ tag.name }} {% endfor %}</div>
+                    {# <div>{{ article.content|safe }} </div> #}
+                    <div>{{ article.plain_content|truncatechars:100 }} </div>
+                </a>
+                <hr>
+            {% endfor %}
+        </div>
+        <div class="col-2">
+            <div class="text-center">人気のタグ</div>
+            <ul class="list-group">
+                {% for article_tag in trend_tags %}
+                    <li class="list-group-item"> {{ article_tag.name }} </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
     <ul class="pagination justify-content-center">
         {% if articles.has_previous %}
-        <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' '1' %}">最初のページ</a></li>
-        <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' articles.previous_page_number %}">前のページ</a></li>
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' '1' %}">最初のページ</a></li>
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' articles.previous_page_number %}">前のページ</a></li>
         {% else %}
-        <li class="page-item"><a class="page-link">最初のページ</a></li>
-        <li class="page-item"><a class="page-link">前のページ</a></li>
+            <li class="page-item"><a class="page-link">最初のページ</a></li>
+            <li class="page-item"><a class="page-link">前のページ</a></li>
         {% endif %}
-        <li class="page-item"><a class="page-link">{{ articles.number }}</a></li>
+            <li class="page-item"><a class="page-link">{{ articles.number }}</a></li>
         {% if articles.has_next %}
-        <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' articles.next_page_number %}">次のページ</a></li>
-        <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' articles.paginator.num_pages %}">最後のページ</a></li>
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' articles.next_page_number %}">次のページ</a></li>
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' articles.paginator.num_pages %}">最後のページ</a></li>
         {% else %}
-        <li class="page-item"><a class="page-link">次のページ</a></li>
-        <li class="page-item"><a class="page-link">最後のページ</a></li>
+            <li class="page-item"><a class="page-link">次のページ</a></li>
+            <li class="page-item"><a class="page-link">最後のページ</a></li>
         {% endif %}
-    </ul>
+    </ul> 
 {% endblock %}

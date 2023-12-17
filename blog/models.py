@@ -33,7 +33,7 @@ class ArticleTag(models.Model):
         return self.name
     
     def count_articles(self):
-        return Article.objects.filter(tag=self.id).count()
+        return Article.objects.filter(article_tag=self.id).count()
 
 
 class Article(models.Model):

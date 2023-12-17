@@ -19,7 +19,6 @@ class IndexView(View):
         context             = {}
         query               = Q()
         
-        search = False
         # 検索内容に応じて絞り込みを行う https://noauto-nolife.com/post/django-or-and-search/
         # https://noauto-nolife.com/post/django-search-querybuilder-custom-templates-js/
         #タイトルでの検索機能
@@ -32,8 +31,6 @@ class IndexView(View):
             
             for w in words:
                 query &= Q(title__contains=w)
-            
-            search = True
             
         #カテゴリ検索ありの時、queryに追加する。
         article_category_search_form    = ArticleCategorySearchForm(request.GET)
@@ -65,24 +62,16 @@ class IndexView(View):
         else:
             context["articles"] = paginator.get_page(1)
         
-        #print(Article.objects.filter(query).query)
-        print(request.GET)
+        # article_tagをそのタグ付けされている記事の多い順に並べたリストを作成
+        dict_tags = []
+        for article_tag in ArticleTag.objects.all():
+            dict_tags.append({"article_tag": article_tag, "counts":article_tag.count_articles()})    
+        dict_tags               = sorted(dict_tags, reverse=True, key=lambda x : x["counts"])
+        
+        context["trend_tags"]   = [ dict_tag["article_tag"] for dict_tag in dict_tags][:5]
+        
         return render(request, "blog/index.html", context)
     
-    def post(self, request, *args, **kwargs):
-
-        copied          = request.POST.copy()
-        copied["user"]  = request.user
-        
-        form    = ArticleForm(copied)
-        
-        if form.is_valid():
-            form.save()
-        else:
-            print(form.errors)
-            
-        return redirect("blog:index")
-
 index   = IndexView.as_view()
 
 class FollowingTimeLineView(LoginRequiredMixin, View):
