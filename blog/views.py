@@ -108,7 +108,7 @@ class FollowingTimeLineView(LoginRequiredMixin, View):
             context["articles"] = paginator.get_page(request.GET["page"])
         else:
             context["articles"] = paginator.get_page(1)
-         
+        
         return render(request, "blog/index.html", context)
 
 following = FollowingTimeLineView.as_view()

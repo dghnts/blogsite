@@ -66,4 +66,5 @@
 - [x] [ログイン時のメール送信機能の実装](https://noauto-nolife.com/post/django-login-mail-by-signal/)
 - [x] ログイン・ログアウトのリンクを作成 
 - [x] ログアウト時のリダイレクトURLを変更(indexpageに移動)
-- []
+- [x] タグのカウント機能
+- [x] 

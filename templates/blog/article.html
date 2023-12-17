@@ -15,9 +15,9 @@
         </div>
         <div class="col-2">
             <div class="mb-2">
-                {{ article.user }}
+                <a href="{% url 'blog:userpage' article.user.id %}">{{ article.user }}</a>
             </div>
-            {% if request.user != article.user %}
+            {% if request.user != article.user and request.user.is_authenticated %}
                 <form action="{% url 'blog:follow' article.user.id %}" method="post">
                     {% csrf_token %}
                     <input type="submit" value="{% follow_checked request article.user.id %}">

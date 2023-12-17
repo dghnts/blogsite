@@ -31,7 +31,9 @@ class ArticleTag(models.Model):
 
     def __str__(self):
         return self.name
-
+    
+    def count_articles(self):
+        return Article.objects.filter(tag=self.id).count()
 
 
 class Article(models.Model):
