@@ -7,8 +7,13 @@ from django.http.response import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 
-from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,Follow
-from .forms import CategoryForm,ArticleCategoryForm,ArticleTagForm,ArticleForm,GoodArticleForm,FollowForm,ArticleCategorySearchForm,ArticleCategoryOptionForm,ArticleTagSearchForm
+from django.utils import timezone
+import datetime
+
+from collections import defaultdict
+
+from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,Follow,Block
+from .forms import CategoryForm,ArticleCategoryForm,ArticleTagForm,ArticleForm,GoodArticleForm,FollowForm,BlockForm,ArticleCategorySearchForm,ArticleCategoryOptionForm,ArticleTagSearchForm
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -70,6 +75,13 @@ class IndexView(View):
         
         context["trend_tags"]   = [ dict_tag["article_tag"] for dict_tag in dict_tags][:5]
         
+        
+        # ログインしている場合ブロックしているユーザーのリストを作成
+        context["blocked_users"] = []
+        if request.user.is_authenticated:
+            for blocked in request.user.blocking_user.all():
+                context["blocked_users"].append(blocked.blockers)
+
         return render(request, "blog/index.html", context)
     
 index   = IndexView.as_view()
@@ -167,12 +179,12 @@ class UserView(LoginRequiredMixin, View):
         
         context["person"]     = User.objects.filter(id=pk).first()
         
-        # ログインしているユーザーが該当ユーザーをフォローしているか判定するフラグ
-        if Follow.objects.filter(follows=request.user, followers=pk).first() in request.user.following_user.all():
-            context["is_follow"] = True
+        # ログインしているユーザーが該当ユーザーをブロックしているか判定するフラグ
+        if Block.objects.filter(blocks=request.user, blockers=pk).first() in request.user.blocking_user.all():
+            context["is_block"] = True
         else:
-            context["is_follow"] = False
-            
+            context["is_block"] = False
+        print(context)
         return render(request, "blog/user.html", context)
 
 userpage   = UserView.as_view()
@@ -202,3 +214,92 @@ class FollowView(LoginRequiredMixin, View):
         return redirect("blog:userpage", pk=pk )
 
 follow  = FollowView.as_view()
+
+# BlockVView(ブロック・ブロック解除を行うビュー)
+class BlockView(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        block   = Block.objects.filter(blocks=request.user, blockers=pk)
+        
+        if block:
+            print("ブロック解除")
+            block.delete()
+        else:
+            dic                 = {}
+            dic["blocks"]        = request.user
+            dic["blockers"]     = pk
+            
+            form    = BlockForm(dic)
+            
+            if form.is_valid():
+                print("ブロックする")
+                
+                # フォローしているユーザーの場合，フォローを解除する（相手のフォロー状態も解除）
+                follow      = Follow.objects.filter(follows=request.user, followers=pk)
+                followed    = Follow.objects.filter(follows=pk, followers=request.user)
+                if follow:
+                    follow.delete()
+                if followed:
+                    followed.delete()
+                form.save()
+            else:
+                print(form.errors)
+        
+        return redirect("blog:userpage", pk=pk )
+
+block = BlockView.as_view()
+
+
+class GoodArticleView(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        
+        dic = {}
+        dic["user"]     = request.user
+        dic["article"]  = pk
+        
+        form    = GoodArticleForm(dic)
+        
+        if form.is_valid():
+            form.save()
+        else:
+            print(form.errors)
+        return redirect("blog:article", pk)
+
+good_article    = GoodArticleView.as_view()
+
+class TrendView(View):
+    def get(self, request, *args, **kwargs):
+        context     = {}
+        
+        last_week   = timezone.now() - datetime.timedelta(days=7)
+        
+        last_week_goods = GoodArticle.objects.filter(dt__gte=last_week)
+        trends          = []
+        
+        for last_week_good in last_week_goods:
+            found = False
+            
+            for trend in trends:
+                if trend["article"] == last_week_good.article:
+                    trend["count"]  += 1
+                    found           = True
+            if not found:
+                trend               = {}
+                trend["article"]    = last_week_good.article
+                trend["count"]      = 1
+                trends.append(trend)
+        
+        for trend in trends:
+            print(trend)
+            
+        trends      = sorted(trends, key=lambda x: x["count"], reverse=True)
+        
+        paginator   = Paginator(trends, 10)
+        
+        if "page" in request.GET:
+            context["trends"] = paginator.get_page(request.GET["page"])
+        else:
+            context["trends"] = paginator.get_page(1)
+        
+        return render(request, "blog/trend.html", context)
+
+trend = TrendView.as_view()

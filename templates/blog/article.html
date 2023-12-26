@@ -12,10 +12,16 @@
             <div>執筆者： {{ article.user }}</div>
             <div>タグ: {% for tag in article.artile_tag.all %}{{ tag.name }} {% endfor %}</div>
             <div>{{ article.content|safe }} </div>
+            <div>
+                <form action="{% url 'blog:good_article' article.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="いいね( {{ article.goodarticle_set.all|length }})">
+                </form>
+            </div>
         </div>
         <div class="col-2">
             <div class="mb-2">
-                <a href="{% url 'blog:userpage' article.user.id %}">{{ article.user }}</a>
+                <a href="{% if request.user != article.user %}{% url 'blog:userpage' article.user.id %}{% else %}{% url 'blog:mypage' %}{% endif %}">{{ article.user }}</a>
             </div>
             {% if request.user != article.user and request.user.is_authenticated %}
                 <form action="{% url 'blog:follow' article.user.id %}" method="post">

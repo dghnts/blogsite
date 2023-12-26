@@ -5,7 +5,7 @@ from django import forms
 from django_summernote.widgets import SummernoteWidget
 from django.conf import settings
 
-from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,ArticleChat,Follow
+from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,ArticleChat,Follow,Block
 
 import bleach
 
@@ -68,6 +68,11 @@ class FollowForm(forms.ModelForm):
     class Meta:
         model	= Follow
         fields	= [ "follows", "followers" ]
+
+class BlockForm(forms.ModelForm):
+    class Meta:
+        model	= Block
+        fields	= [ "blocks", "blockers" ]
 
 class ArticleCategoryOptionForm(forms.ModelForm):
     class Meta:

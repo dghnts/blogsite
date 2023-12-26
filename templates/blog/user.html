@@ -8,11 +8,17 @@
     <h2>{{ person.username }}のページ</h2>
 
     {% if request.user != person %}
-        <form action="{% url 'blog:follow' person.id %}" method="post">
+        {% if not is_block %}
+            <form action="{% url 'blog:follow' person.id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="{% follow_checked request person.id %}">
+                {#<input type="submit" value={% if not is_follow %}"フォロー"{%else%}"フォロー解除"{% endif %}>#}
+            </form>
+        {% endif %}
+        <form action="{% url 'blog:block' person.id %}" method="post">
             {% csrf_token %}
-            <input type="submit" value="{% follow_checked request person.id %}">
-            {#<input type="submit" value={% if not is_follow %}"フォロー"{%else%}"フォロー解除"{% endif %}>#}
-        </form>
+            <input type="submit" value="{% block_checked request person.id %}">
+        </form>        
     {% endif %}
     
 

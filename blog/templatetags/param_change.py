@@ -45,3 +45,16 @@ def follow_checked(request, user):
     else:
         return "フォローする"
         #return False
+
+# 自分が対象ユーザーをフォローしているかチェックする。
+@register.simple_tag()
+def block_checked(request, user):
+    from ..models import Block
+    
+    if Block.objects.filter(blocks=request.user, blockers=user).exists():
+
+        return "ブロック解除"
+        #return True
+    else:
+        return "ブロックする"
+        #return False

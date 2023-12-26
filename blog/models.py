@@ -76,6 +76,8 @@ class GoodArticle(models.Model):
     article             = models.ForeignKey(Article,verbose_name="記事", on_delete=models.CASCADE)
     user                = models.ForeignKey(settings.AUTH_USER_MODEL,verbose_name="投稿者", on_delete=models.CASCADE)
     
+    class Meta:
+        unique_together     = ("article", "user")
     
 class ArticleChat(models.Model):
     dt                  = models.DateTimeField(verbose_name="投稿日時",default=timezone.now)
@@ -95,4 +97,14 @@ class Follow(models.Model):
     follows     = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="フォローする（した）ユーザー", related_name='following_user', on_delete=models.CASCADE)
     followers   = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="フォローされる（された）ユーザー", related_name='followed_user', on_delete=models.CASCADE) 
 
+class Block(models.Model):
 
+    # 重複したフォローを防ぐ
+    class Meta:
+        unique_together = ('blocks', 'blockers')
+
+
+    dt          = models.DateTimeField(verbose_name="ブロックされた日時",default=timezone.now)
+    # 同じCustomUserと1対多とするため、related_name="" の指定が必須。
+    blocks      = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="ブロックしたユーザー", related_name='blocking_user', on_delete=models.CASCADE)
+    blockers    = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="ブロックされたユーザー", related_name='blocked_user', on_delete=models.CASCADE) 
