@@ -4,7 +4,7 @@ from django.contrib import admin
 # == This code was created by https://noauto-nolife.com/post/django-auto-create-models-forms-admin/== #
 
 from django.contrib import admin
-from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,ArticleChat,Follow
+from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,ArticleChat,Follow,Block,Report
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display	= [ "name" ]
@@ -30,6 +30,12 @@ class ArticleChatAdmin(admin.ModelAdmin):
 class FollowAdmin(admin.ModelAdmin):
     list_display	= [ "dt", "follows", "followers" ]
 
+class BlockAdmin(admin.ModelAdmin):
+    list_display	= [ "dt", "blocks", "blockers" ]
+
+
+class ReportAdmin(admin.ModelAdmin):
+    list_display	= [ "dt", "user", "article", "reason", "comment" ]
 
 admin.site.register(Category,CategoryAdmin)
 admin.site.register(ArticleCategory,ArticleCategoryAdmin)
@@ -39,3 +45,5 @@ admin.site.register(Article,ArticleAdmin)
 admin.site.register(GoodArticle,GoodArticleAdmin)
 admin.site.register(ArticleChat,ArticleChatAdmin)
 admin.site.register(Follow,FollowAdmin)
+admin.site.register(Block,BlockAdmin)
+admin.site.register(Report,ReportAdmin)

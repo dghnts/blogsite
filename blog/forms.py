@@ -5,7 +5,7 @@ from django import forms
 from django_summernote.widgets import SummernoteWidget
 from django.conf import settings
 
-from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,ArticleChat,Follow,Block
+from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,ArticleChat,Follow,Block,Report
 
 import bleach
 
@@ -96,3 +96,7 @@ class ArticleTagSearchForm(forms.ModelForm):
     class Meta:
         model   = Article
         fields  = [ "article_tag" ]
+class ReportForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields= [ "user", "article", "reason", "comment"]

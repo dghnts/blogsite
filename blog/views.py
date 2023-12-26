@@ -12,8 +12,8 @@ import datetime
 
 from collections import defaultdict
 
-from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,Follow,Block
-from .forms import CategoryForm,ArticleCategoryForm,ArticleTagForm,ArticleForm,GoodArticleForm,FollowForm,BlockForm,ArticleCategorySearchForm,ArticleCategoryOptionForm,ArticleTagSearchForm
+from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,Follow,Block,Report
+from .forms import CategoryForm,ArticleCategoryForm,ArticleTagForm,ArticleForm,GoodArticleForm,FollowForm,BlockForm,ArticleCategorySearchForm,ArticleCategoryOptionForm,ArticleTagSearchForm,ReportForm
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -132,6 +132,7 @@ class CreateArticleView(LoginRequiredMixin, View):
         
         form    = ArticleForm(copied)
         if form.is_valid():
+            print(form)
             form.save()
         else:
             print(form.errors)
@@ -144,8 +145,26 @@ class ArticleView(View):
     def get(self, request, pk, *args, **kwargs):
         context             = {}
         context["article"]  = Article.objects.filter(id=pk).first()
+        
+        context["reasons"]  = [ reason[0] for reason in Report.reason.field.choices ]
+        
         return render(request, "blog/article.html",context)
-
+    
+    def post(self, request, pk, *args, **kwargs):
+        copied              = request.POST.copy()
+        copied["user"]      = request.user
+        copied["article"]   = pk
+        
+        form = ReportForm(copied)
+        
+        if form.is_valid():
+            print("通報完了")
+            form.save()
+        else:
+            print(form.errors)
+        
+        return redirect("blog:article", pk)
+            
 article = ArticleView.as_view()
 
 class ArticleCategoryOptionCreateView(LoginRequiredMixin, View):

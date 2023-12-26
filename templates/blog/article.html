@@ -18,6 +18,20 @@
                     <input type="submit" value="いいね( {{ article.goodarticle_set.all|length }})">
                 </form>
             </div>
+            <div>
+                通報：
+                <form action="{% url 'blog:article' article.id %}" method="post">
+                    {% csrf_token %}
+                    <select name="reason">
+                        <option value="">通報理由を選択してください</option>
+                        {% for reason in reasons %}
+                            <option value="{{ reason }}">{{ reason }}</option>
+                        {% endfor %}
+                        <textarea class="form-control" name="comment"></textarea>
+                        <input type="submit" value="通報">
+                    </select>
+                </form>
+            </div>
         </div>
         <div class="col-2">
             <div class="mb-2">

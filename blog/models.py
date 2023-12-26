@@ -108,3 +108,13 @@ class Block(models.Model):
     # 同じCustomUserと1対多とするため、related_name="" の指定が必須。
     blocks      = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="ブロックしたユーザー", related_name='blocking_user', on_delete=models.CASCADE)
     blockers    = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="ブロックされたユーザー", related_name='blocked_user', on_delete=models.CASCADE) 
+
+class Report(models.Model):
+    dt      = models.DateTimeField(verbose_name="通報した日時", default=timezone.now)
+    user    = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="通報したユーザー", on_delete=models.CASCADE)
+    article = models.ForeignKey(Article,verbose_name="通報した記事", on_delete=models.CASCADE)
+    reason  = models.CharField(verbose_name="通報理由", choices=settings.REASONS,max_length=30)
+    comment = models.CharField(verbose_name="通報の詳細", max_length=2000, blank=True)
+    
+    def __str__(self):
+        return self.reason

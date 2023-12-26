@@ -13,6 +13,9 @@
  {"model": "blog.articletag", "pk": 1, "fields": {"name": "サンプル"}},
  {"model": "blog.articletag", "pk": 2, "fields": {"name": "test"}},
  {"model": "blog.articletag", "pk": 3, "fields": {"name": "ニュース"}},
+ {"model": "blog.articletag", "pk": 4, "fields": {"name": "雑学"}},
+ {"model": "blog.articletag", "pk": 5, "fields": {"name": "メモ"}},
+ {"model": "blog.articletag", "pk": 6, "fields": {"name": "トレンド"}},
  {"model": "blog.article", "pk": 6, "fields": {"dt": "2023-12-02T02:33:58Z", "title": "test", "article_category": 2, "content": "<p>これはテストです</p>", "user": "2b3c108d-0a69-4bab-b5ab-38674a73566f", "article_tag": [2], "good": []}},
  {"model": "blog.article", "pk": 7, "fields": {"dt": "2023-12-02T02:34:14Z", "title": "sample", "article_category": 3, "content": "<p>これは英語記事のサンプルです</p>", "user": "2b3c108d-0a69-4bab-b5ab-38674a73566f", "article_tag": [1, 2], "good": []}},
  {"model": "blog.article", "pk": 8, "fields": {"dt": "2023-12-02T02:34:29Z", "title": "test2", "article_category": 4, "content": "<p>これは国語の記事のテストです</p>", "user": "2b3c108d-0a69-4bab-b5ab-38674a73566f", "article_tag": [1, 3], "good": []}},
@@ -20,8 +23,10 @@
  {"model": "blog.article", "pk": 10, "fields": {"dt": "2023-12-02T02:35:12Z", "title": "repeat", "article_category": 10, "content": "<p>歌舞伎</p>", "user": "2b3c108d-0a69-4bab-b5ab-38674a73566f", "article_tag": [3], "good": []}},
  {"model": "blog.article", "pk": 11, "fields": {"dt": "2023-12-02T02:50:53Z", "title": "test1", "article_category": 6, "content": "<p>これは音楽の記事です</p>", "user": "2b3c108d-0a69-4bab-b5ab-38674a73566f", "article_tag": [1, 2, 3], "good": []}},
  {"model": "blog.article", "pk": 12, "fields": {"dt": "2023-12-02T02:51:22Z", "title": "test", "article_category": 9, "content": "<p>これは宝塚の記事です</p>", "user": "2b3c108d-0a69-4bab-b5ab-38674a73566f", "article_tag": [2], "good": []}},
- {"model": "blog.article", "pk": 13, "fields": {"dt": "2023-12-03T11:08:23.575Z", "title": "test", "article_category": 2, "content": "<p>数学</p>", "user": "2b3c108d-0a69-4bab-b5ab-38674a73566f", "article_tag": [1, 2], "good": []}},
- {"model": "blog.article", "pk": 14, "fields": {"dt": "2023-12-03T11:09:01.809Z", "title": "test", "article_category": 2, "content": "<p>これは数学に関する記事です</p>", "user": "2b3c108d-0a69-4bab-b5ab-38674a73566f", "article_tag": [1, 2, 3], "good": []}},
- {"model": "blog.article", "pk": 15, "fields": {"dt": "2023-12-09T01:33:48.541Z", "title": "test", "article_category": 2, "content": "<p>これは秀吉の書いた記事です</p>", "user": "737d831b-32bd-4028-90fd-bece547f042e", "article_tag": [1], "good": []}},
- {"model": "blog.article", "pk": 16, "fields": {"dt": "2023-12-09T01:34:10.921Z", "title": "testA", "article_category": 6, "content": "<p>これは秀吉の書いた記事2です</p>", "user": "737d831b-32bd-4028-90fd-bece547f042e", "article_tag": [2], "good": []}}
-]
+ {"model": "blog.article", "pk": 13, "fields": {"dt": "2023-12-03T11:08:23Z", "title": "test", "article_category": 2, "content": "<p>数学</p>", "user": "2b3c108d-0a69-4bab-b5ab-38674a73566f", "article_tag": [1, 2, 3, 4, 5, 6], "good": []}},
+ {"model": "blog.article", "pk": 14, "fields": {"dt": "2023-12-03T11:09:01Z", "title": "test", "article_category": 2, "content": "<p>これは数学に関する記事です</p>", "user": "2b3c108d-0a69-4bab-b5ab-38674a73566f", "article_tag": [1, 2, 3, 4, 6], "good": []}},
+ {"model": "blog.article", "pk": 15, "fields": {"dt": "2023-12-09T01:33:48Z", "title": "test", "article_category": 2, "content": "<p>これは秀吉の書いた記事です</p>", "user": "737d831b-32bd-4028-90fd-bece547f042e", "article_tag": [1, 2], "good": []}},
+ {"model": "blog.article", "pk": 16, "fields": {"dt": "2023-12-09T01:34:10.921Z", "title": "testA", "article_category": 6, "content": "<p>これは秀吉の書いた記事2です</p>", "user": "737d831b-32bd-4028-90fd-bece547f042e", "article_tag": [2], "good": []}},
+ {"model": "blog.goodarticle", "pk": 36, "fields": {"dt": "2023-12-25T16:36:07.300Z", "article": 16, "user": "2b3c108d-0a69-4bab-b5ab-38674a73566f"}},
+ {"model": "blog.follow", "pk": 11, "fields": {"dt": "2023-12-26T01:24:54.421Z", "follows": "2b3c108d-0a69-4bab-b5ab-38674a73566f", "followers": "d2528462-262e-4fdc-b9cc-2b56f4cf28fd"}},
+ {"model": "blog.follow", "pk": 12, "fields": {"dt": "2023-12-26T01:27:55.928Z", "follows": "2b3c108d-0a69-4bab-b5ab-38674a73566f", "followers": "737d831b-32bd-4028-90fd-bece547f042e"}}]
