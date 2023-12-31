@@ -12,7 +12,7 @@ import datetime
 
 from collections import defaultdict
 
-from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,Follow,Block,Report
+from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,Follow,Block,Report,Notify
 from .forms import CategoryForm,ArticleCategoryForm,ArticleTagForm,ArticleForm,GoodArticleForm,FollowForm,BlockForm,ArticleCategorySearchForm,ArticleCategoryOptionForm,ArticleTagSearchForm,ReportForm
 
 from django.contrib.auth import get_user_model
@@ -322,3 +322,23 @@ class TrendView(View):
         return render(request, "blog/trend.html", context)
 
 trend = TrendView.as_view()
+
+class NotifyView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        context = {}
+        
+        notifies    = Notify.objects.filter(user=request.user).order_by("-dt")
+        paginator   = Paginator(notifies, 10)
+        
+        if "page" in request.GET:
+            context["notifies"] = paginator.get_page(request.GET["page"])
+        else:
+            context["notifies"] = paginator.get_page(1)
+        
+        for notify in notifies:
+            if not notify.read_at:
+                notify.reaad_at = timezone.now()
+                notify.save()
+        return render(request, "blog/notify.html", context)
+
+notify = NotifyView.as_view()

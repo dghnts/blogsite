@@ -82,6 +82,7 @@
             {% if not request.user.is_authenticated %}
               <a class="btn btn-outline-success" href="{% url "login" %}">ログイン</a>              
             {% else %}
+              {#　ログインしているときだけ表示する　#}
               <form action="{% url "logout" %}" method="post">
                 {% csrf_token %}
                 <input class="btn btn-outline-success" type="submit" value="ログアウト">
@@ -89,6 +90,10 @@
               <a class="btn btn-warning" href="{% url 'password_change' %}">パスワードの変更</a>
             {% endif %}
           <a class="btn btn-success mx-2" href="{% url 'blog:create_article' %}">新規作成</a>
+          <a class="notify_area" href="{% url 'blog:notify' %}">
+            <i class="fa-regular fa-bell"></i>
+            <span class="notify_amount">{{ Notify_Counts }}</span>
+          </a>
         </div>
       </nav>
       <div class="text-center">

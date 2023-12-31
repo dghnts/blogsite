@@ -14,5 +14,6 @@ urlpatterns = [
     path("user_page/<uuid:pk>/", views.userpage, name="userpage"),
     path("follow/<uuid:pk>/", views.follow, name="follow"),
     path("block/<uuid:pk>/", views.block, name="block"),
-
+    
+    path("notify/", views.notify, name="notify"),
 ]

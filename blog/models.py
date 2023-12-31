@@ -165,3 +165,22 @@ class Report(models.Model):
 
     def __str__(self):
         return self.reason
+
+
+class Notify(models.Model):
+    dt      = models.DateTimeField(verbose_name="通知日時", default=timezone.now)
+    content = models.CharField(verbose_name="通知内容", max_length=100)
+    user    = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="通知するユーザー", on_delete=models.CASCADE)
+    read_at = models.DateTimeField(verbose_name="既読日時", blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+            super().save(*args, **kwargs)
+            
+            msg = EmailMessage(
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to = [self.user.email],
+                subject = "ブログサイトより通知",
+                body    = self.content, 
+            )
+
+            msg.send(fail_silently=False)
