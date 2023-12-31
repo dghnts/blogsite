@@ -5,6 +5,7 @@ from django.conf import settings
 
 import bs4
 
+from django.core.mail import EmailMessage
 
 class Category(models.Model):
     name = models.CharField(verbose_name="カテゴリ名", max_length=50)
