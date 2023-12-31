@@ -5,8 +5,39 @@
 {% endblock %}
 
 {% block main %}
-    <div class="row">
+    <div class="row mx-0">
         <div class="col-10">
+            {% for article in articles %}
+                {% if not article.user in blocked_users  %}
+
+                {# TODO: カスタムユーザーモデルにハンドルネームを入力するフィールドを作成する？ #}
+                <div>執筆者： {{ article.user.username }}</div>
+                <div>投稿日時： {{ article.dt }}</div>
+                <a href="{% url 'blog:article' article.id %}">
+                    <h2 class="text-white bg-primary" px-2 py-1">{{ article.title }} </h2>
+                </a>
+                
+                <div class="row py-2">
+                    <div class="col-sm-3 text-center"><a href="{% url 'blog:article' article.id %}">{{ article.text_thumbnail|safe }}</a> </div>
+                    <div class="col-sm-9">{{ article.plain_content|truncatechars:100 }} </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-sm-3">
+                        <div>カテゴリ： <a href="?{% url_replace request 'article_category' article.article_category.id %}">{{ article.article_category.name }}</a></div>
+                        <div>タグ: {% for tag in article.article_tag.all %} <a href="?{% url_replace request 'article_tag' tag.id %}">{{ tag.name }}</a> {% endfor %}</div>                    
+                    
+                    </div>
+                    <div class="col-sm-9 text-end">
+                        <a class="btn btn-outline-primary" href="{% url 'blog:article' article.id %}">続きを読む</a>
+                    </div>
+
+                </div>
+                <hr>
+                {% endif %}
+            {% endfor %}
+
+            {% comment %}
             {% for article in articles %}
                 {% if not article.user in blocked_users  %}
                     <a href="{% url 'blog:article' article.id %}">
@@ -22,6 +53,8 @@
                     <hr>
                 {% endif %}
             {% endfor %}
+            {% endcomment %}
+
         </div>
         <div class="col-2">
             <div class="text-center">人気のタグ</div>
