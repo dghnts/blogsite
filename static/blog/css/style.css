@@ -1,0 +1,34 @@
+/* 記事 */
+.article_area{
+    display:flex;
+}
+
+.article_menu{
+    flex-basis:8rem;
+}
+
+.article_content{
+    flex-basis:calc(100% - 8rem);
+}
+
+/*スクロールで追従するように機能を実装*/
+.article_menu_lsit{
+    position:sticky;
+    top: 0;
+}
+.good_area{
+    text-align: center;
+}
+
+.good_label{
+    display: block;
+    font-size:3rem;
+    cursor: pointer;
+
+    color: crimson;
+}
+
+.good_area_description{
+    font-weight:bold;
+}
+
