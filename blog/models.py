@@ -7,6 +7,7 @@ import bs4
 
 from django.core.mail import EmailMessage
 
+
 class Category(models.Model):
     name = models.CharField(verbose_name="カテゴリ名", max_length=50)
 
@@ -169,19 +170,37 @@ class Report(models.Model):
 
 
 class Notify(models.Model):
-    dt      = models.DateTimeField(verbose_name="通知日時", default=timezone.now)
+    dt = models.DateTimeField(verbose_name="通知日時", default=timezone.now)
+    subject = models.CharField(
+        verbose_name="件名",
+        default="ブログサイトから通知があります",
+        max_length=20,
+        blank=True,
+        null=True,
+    )
     content = models.CharField(verbose_name="通知内容", max_length=100)
-    user    = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="通知するユーザー", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, verbose_name="通知するユーザー", on_delete=models.CASCADE
+    )
     read_at = models.DateTimeField(verbose_name="既読日時", blank=True, null=True)
 
     def save(self, *args, **kwargs):
-            super().save(*args, **kwargs)
-            
-            msg = EmailMessage(
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to = [self.user.email],
-                subject = "ブログサイトより通知",
-                body    = self.content, 
-            )
+        super().save(*args, **kwargs)
 
-            msg.send(fail_silently=False)
+        msg = EmailMessage(
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[self.user.email],
+            subject=self.subject,
+            body=self.content,
+        )
+
+        msg.send(fail_silently=False)
+
+
+class Notify_Mail(models.Model):
+    dt = models.DateTimeField(verbose_name="送信日時", default=timezone.now)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, verbose_name="受信者", on_delete=models.CASCADE
+    )
+    notify = models.ForeignKey(Notify, verbose_name="メールする通知", on_delete=models.CASCADE)
+    unique_together = ("user", "notify")

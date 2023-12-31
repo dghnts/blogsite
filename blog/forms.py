@@ -15,6 +15,7 @@ from .models import (
     Follow,
     Block,
     Report,
+    Notify,
 )
 
 import bleach
@@ -131,3 +132,8 @@ class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
         fields = ["user", "article", "reason", "comment"]
+
+class NotifyForm(forms.ModelForm):
+    class Meta:
+        model   = Notify
+        fields  = ["subject","content","user"]

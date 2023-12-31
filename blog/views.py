@@ -13,7 +13,7 @@ import datetime
 from collections import defaultdict
 
 from .models import Category,ArticleCategory,ArticleTag,Article,GoodArticle,Follow,Block,Report,Notify
-from .forms import CategoryForm,ArticleCategoryForm,ArticleTagForm,ArticleForm,GoodArticleForm,FollowForm,BlockForm,ArticleCategorySearchForm,ArticleCategoryOptionForm,ArticleTagSearchForm,ReportForm
+from .forms import CategoryForm,ArticleCategoryForm,ArticleTagForm,ArticleForm,GoodArticleForm,FollowForm,BlockForm,ArticleCategorySearchForm,ArticleCategoryOptionForm,ArticleTagSearchForm,ReportForm,NotifyForm
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -222,14 +222,26 @@ class FollowView(LoginRequiredMixin, View):
             dic["follows"]      = request.user
             dic["followers"]    = pk
             
-            form    = FollowForm(dic)
+            follow_form    = FollowForm(dic)
             
-            if form.is_valid():
+            if follow_form.is_valid():
                 print("フォローする")
-                form.save()
+                follow_form.save()
             else:
-                print(form.errors)
-        
+                print(follow_form.errors)
+            
+            dic_notify              = {}
+            dic_notify["subject"]   = "フォローされました"
+            dic_notify["content"]   = request.user.username+"にフォローされました。"
+            dic_notify["user"]      = pk
+            
+            notify_form = NotifyForm(dic_notify)
+            
+            if notify_form.is_valid():
+                notify_form.save()
+            else:
+                print(notify_form.errors)
+                        
         return redirect("blog:userpage", pk=pk )
 
 follow  = FollowView.as_view()
@@ -275,12 +287,26 @@ class GoodArticleView(LoginRequiredMixin, View):
         dic["user"]     = request.user
         dic["article"]  = pk
         
-        form    = GoodArticleForm(dic)
+        good_form    = GoodArticleForm(dic)
         
-        if form.is_valid():
-            form.save()
+        if good_form.is_valid():
+            good_form.save()
         else:
-            print(form.errors)
+            print(good_form.errors)
+        
+        article = Article.objects.filter(id=pk).first()
+        dic_notify = {}
+        dic_notify["subject"] = "いいねがつきました"
+        dic_notify["content"] = article.title+"にいいねがつきました。"
+        dic_notify["user"]  = article.user
+        
+        notify_form    = NotifyForm(dic_notify)
+        
+        if notify_form.is_valid():
+            notify_form.save()
+        else:
+            print(notify_form.errors)
+        
         return redirect("blog:article", pk)
 
 good_article    = GoodArticleView.as_view()
