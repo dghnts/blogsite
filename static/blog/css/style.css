@@ -52,3 +52,25 @@
 .good_area_description {
   font-weight: bold;
 }
+
+.report_area{
+  text-align:center;
+}
+.report_label {
+  display:block;
+  font-size:3rem;
+  cursor:pointer;
+
+  color:orange;
+}
+.report_area_description{
+  font-weight:bold;
+}
+
+
+
+
+.not_read{
+  background:orange;
+
+}
