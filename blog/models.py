@@ -184,6 +184,8 @@ class Notify(models.Model):
     )
     read_at = models.DateTimeField(verbose_name="既読日時", blank=True, null=True)
 
+    # TODO:signals.pyを利用してインスタンス保存後にメールを送信し，NotifyMailオブジェクトを作成する
+    """
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
@@ -195,9 +197,10 @@ class Notify(models.Model):
         )
 
         msg.send(fail_silently=False)
+    """
 
 
-class Notify_Mail(models.Model):
+class NotifyMail(models.Model):
     dt = models.DateTimeField(verbose_name="送信日時", default=timezone.now)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="受信者", on_delete=models.CASCADE

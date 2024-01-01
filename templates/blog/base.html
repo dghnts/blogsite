@@ -97,10 +97,8 @@
         </div>
       </nav>
       <div class="text-center">
-        {# TODO:新着順に記事を表示 #}
         <a class="me-2 text-dark" href="{% url "blog:index" %}">TimeLine</a>
         {% if request.user.is_authenticated %}
-          {# TODO:フォローしているユーザーが作成した記事を表示 #}
           <a class="me-2 text-dark" href="{% url "blog:following" %}">Following</a>
         {% endif %}
       </div>  
