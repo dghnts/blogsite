@@ -1,8 +1,5 @@
-{% extends "blog/base.html" %} 
-{% load param_change %} 
-{% block extra_head %} 
-{%endblock %} 
-{% block main %}
+{% extends "blog/base.html" %} {% load param_change %} {% block extra_head %}
+{%endblock %} {% block main %}
 <div class="row w-100">
     <div class="col-10 article_area">
         <div class="article_menu">
@@ -102,7 +99,6 @@
                 type="submit"
                 value="{% follow_checked request article.user.id %}"
             />
-            {#<input type="submit" value={% if not is_follow%}"フォロー"{%else%}"フォロー解除"{% endif %}>#}
         </form>
         {% endif %}
     </div>
