@@ -415,9 +415,9 @@ class NotifyView(LoginRequiredMixin, View):
         else:
             context["notifies"] = paginator.get_page(1)
 
-        for notify in notifies:
+        for notify in context["notifies"]:
             if not notify.read_at:
-                notify.reaad_at = timezone.now()
+                notify.read_at = timezone.now()
                 notify.save()
         return render(request, "blog/notify.html", context)
 
