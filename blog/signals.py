@@ -12,24 +12,24 @@ from .forms import NotifyMailForm
 
 # insranceで保存したmodelのインスタンスを取得する
 def save_notify(sender, instance, *args, **kwargs):
-    # TODO: 通知をお知らせするメールの送信
-    msg = EmailMessage(
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[instance.user.email],
-        subject=instance.subject,
-        body=instance.content,
-    )
-
-    msg.send(fail_silently=False)
-
     # TODO: NotifyMailオブジェクトの作成
     dic = {}
     dic["user"] = instance.user
     dic["notify"] = instance
-
     notifymail_form = NotifyMailForm(dic)
 
-    if notifymail_form.is_valid():
-        notifymail_form.save()
+    if not notifymail_form.is_valid():
+        print(notifymail_form.errors)
     else:
-        print(notifymail_form.error)
+
+        # TODO: 通知をお知らせするメールの送信
+        msg = EmailMessage(
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[instance.user.email],
+            subject=instance.subject,
+            body=instance.content,
+        )
+
+        msg.send(fail_silently=False)
+        
+        notifymail_form.save()

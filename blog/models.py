@@ -206,4 +206,6 @@ class NotifyMail(models.Model):
         settings.AUTH_USER_MODEL, verbose_name="受信者", on_delete=models.CASCADE
     )
     notify = models.ForeignKey(Notify, verbose_name="メールする通知", on_delete=models.CASCADE)
-    unique_together = ("user", "notify")
+    
+    class Meta:
+        unique_together = ("user", "notify")
