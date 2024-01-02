@@ -16,17 +16,17 @@
     {% endfor %}
     {% if notifies.paginator.num_pages != 1 %}
         <ul class="pagination justify-content-center">
-            {% if articles.has_previous %}
+            {% if notifies.has_previous %}
                 <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' '1' %}">最初のページ</a></li>
-                <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' articles.previous_page_number %}">前のページ</a></li>
+                <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' notifies.previous_page_number %}">前のページ</a></li>
             {% else %}
                 <li class="page-item"><a class="page-link">最初のページ</a></li>
                 <li class="page-item"><a class="page-link">前のページ</a></li>
             {% endif %}
-                <li class="page-item"><a class="page-link">{{ articles.number }}</a></li>
-            {% if articles.has_next %}
-                <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' articles.next_page_number %}">次のページ</a></li>
-                <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' articles.paginator.num_pages %}">最後のページ</a></li>
+                <li class="page-item"><a class="page-link">{{ notifies.number }}</a></li>
+            {% if notifies.has_next %}
+                <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' notifies.next_page_number %}">次のページ</a></li>
+                <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' notifies.paginator.num_pages %}">最後のページ</a></li>
             {% else %}
                 <li class="page-item"><a class="page-link">次のページ</a></li>
                 <li class="page-item"><a class="page-link">最後のページ</a></li>
