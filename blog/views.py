@@ -185,6 +185,11 @@ class ArticleView(View):
 
         context["reasons"] = [reason[0] for reason in Report.reason.field.choices]
 
+        # この記事がいいね済みか調べる。
+        context["is_good"] = GoodArticle.objects.filter(
+            article=pk, user=request.user
+        ).exists()
+
         return render(request, "blog/article.html", context)
 
     def post(self, request, pk, *args, **kwargs):

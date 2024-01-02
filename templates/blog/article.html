@@ -1,84 +1,70 @@
 {% extends "blog/base.html" %}
 {% load param_change %}
-
-{% block extra_head %}
-{% endblock %}
-
+{% block extra_head %}{% endblock %}
 {% block main %}
     <div class="row w-100">
         <div class="col-10 article_area">
-            
             <div class="article_menu">
                 {# いいねボタンを実装 #}
-                <form action="{% url 'blog:good_article' article.id %}" method="POST" style="display:none;">
+                <form action="{% url 'blog:good_article' article.id %}"
+                      method="POST"
+                      style="display: none">
                     {% csrf_token %}
-                    <input id="good_submit" type="submit" value="いいね">
+                    <input id="good_submit" type="submit" value="いいね" />
                 </form>
-
-
                 <div class="article_menu_list">
                     <div class="good_area">
-
                         {% if is_good %}
-                        <label class="good_label" for="good_submit">
-                            <i class="fa-solid fa-heart"></i>
-                        </label>
+                            <label class="good_label" for="good_submit">
+                                <i class="fa-solid fa-heart"></i>
+                            </label>
                         {% else %}
-                        <label class="good_label" for="good_submit">
-                            <i class="fa-regular fa-heart"></i>
-                        </label>
+                            <label class="good_label" for="good_submit">
+                                <i class="fa-regular fa-heart"></i>
+                            </label>
                         {% endif %}
                         <div class="good_area_description">いいね( {{ article.goodarticle_set.all|length }} )</div>
                     </div>
                     <div class="report_area">
-                        {# ここに通報機能を実装(modal)#}
-
+                        {# TODO: 通報機能の実装 #}
+                        <label class="report_label" for="report_submit">
+                            <i class="fa-solid fa-flag"></i>
+                        </label>
+                        <div class="report_area_description">報告</div>
                     </div>
-
                 </div>
-
-            </div>            
+            </div>
             <div class="article_content">
                 <div>
-                    <div class="d-inline-block">カテゴリ： <a href="?{% url_replace request 'article_category' article.article_category.id %}">{{ article.article_category.name }}</a></div>
-                    <div class="d-inline-block">タグ: {% for tag in article.article_tag.all %} <a href="?{% url_replace request 'article_tag' tag.id %}">{{ tag.name }}</a> {% endfor %}</div>
+                    <div class="d-inline-block">
+                        カテゴリ：
+                        <a href="?{% url_replace request 'article_category' article.article_category.id %}">{{ article.article_category.name }}</a>
+                    </div>
+                    <div class="d-inline-block">
+                        タグ:
+                        {% for tag in article.article_tag.all %}
+                            <a href="?{% url_replace request 'article_tag' tag.id %}">{{ tag.name }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 <h2 class="text-white bg-primary px-2 py-1">{{ article.title }}</h2>
                 {# TODO:ハンドルネームを指定するか#}
                 <div>執筆者： {{ article.user.username }}</div>
                 <div>投稿日時： {{ article.dt }}</div>
-    
-                <div>{{ article.content|safe }} </div>
-                {% comment %}
-                <div>
-                    通報：
-                    <form action="{% url 'blog:article' article.id %}" method="post">
-                        {% csrf_token %}
-                        <select name="reason">
-                            <option value="">通報理由を選択してください</option>
-                            {% for reason in reasons %}
-                                <option value="{{ reason }}">{{ reason }}</option>
-                            {% endfor %}
-                            <textarea class="form-control" name="comment"></textarea>
-                            <input type="submit" value="通報">
-                        </select>
-                    </form>
-                </div>
-
-                {% endcomment %}
+                <div>{{ article.content|safe }}</div>
             </div>
-        </div>
-        <div class="col-2">
-            <div class="mb-2">
-                <a href="{% if request.user != article.user %}{% url 'blog:userpage' article.user.id %}{% else %}{% url 'blog:mypage' %}{% endif %}">{{ article.user }}</a>
-            </div>
-            {% if request.user != article.user and request.user.is_authenticated %}
-                <form action="{% url 'blog:follow' article.user.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" value="{% follow_checked request article.user.id %}">
-                    {#<input type="submit" value={% if not is_follow %}"フォロー"{%else%}"フォロー解除"{% endif %}>#}
-                </form>
-            {% endif %}
         </div>
     </div>
+    <div class="col-2">
+        <div class="mb-2">
+            <a href="{% if request.user != article.user %}{% url 'blog:userpage' article.user.id %}{% else %}{% url 'blog:mypage' %}{% endif %}">{{ article.user }}</a>
+        </div>
+        {% if request.user != article.user and request.user.is_authenticated %}
+            <form action="{% url 'blog:follow' article.user.id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="{% follow_checked request article.user.id %}" />
+            </form>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
