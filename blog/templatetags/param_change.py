@@ -58,3 +58,13 @@ def block_checked(request, user):
     else:
         return "ブロックする"
         #return False
+
+@register.simple_tag()
+def read_check(notify):
+    from django.utils import timezone
+    
+    if not notify.read_at:
+        notify.read_at = timezone.now()
+        notify.save()
+    
+    return ""

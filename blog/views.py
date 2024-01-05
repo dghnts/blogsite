@@ -43,7 +43,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class IndexView(View):
+class IndexView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         context = {}
         query = Q()
@@ -412,6 +412,19 @@ class NotifyView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         context = {}
 
+        # テスト用通知
+        dic_notify = {}
+        dic_notify["subject"] = "いいねがつきました"
+        dic_notify["content"] = "これはテストです"
+        dic_notify["user"] = request.user
+
+        notify_form = NotifyForm(dic_notify)
+
+        if not notify_form.is_valid():
+            print(notify_form.errors)
+        else:
+            notify_form.save()
+
         notifies = Notify.objects.filter(user=request.user).order_by("-dt")
         paginator = Paginator(notifies, 10)
 
@@ -420,10 +433,9 @@ class NotifyView(LoginRequiredMixin, View):
         else:
             context["notifies"] = paginator.get_page(1)
 
-        for notify in context["notifies"]:
-            if not notify.read_at:
-                notify.read_at = timezone.now()
-                notify.save()
+        for notify in notifies:
+            print(notify.read_at)
+
         return render(request, "blog/notify.html", context)
 
 

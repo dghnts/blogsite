@@ -6,10 +6,10 @@ from .models import Notify
 from .forms import NotifyMailForm
 
 
+'''
 # Notifyモデルのsaveメソッド実行後にメールを送信する
 # senderはsaveメソッドを実行するモデル
 @receiver(post_save, sender=Notify)
-
 # insranceで保存したmodelのインスタンスを取得する
 def save_notify(sender, instance, *args, **kwargs):
     # TODO: NotifyMailオブジェクトの作成
@@ -33,3 +33,4 @@ def save_notify(sender, instance, *args, **kwargs):
         msg.send(fail_silently=False)
         
         notifymail_form.save()
+'''

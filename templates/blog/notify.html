@@ -12,6 +12,7 @@
         <div class="border {% if not notify.read_at %}not_read{% endif %}">
             <div>{{ notify.dt }}</div>
             <div>{{ notify.content }}</div>
+            {% read_check notify %}
         </div>
     {% endfor %}
     {% if notifies.paginator.num_pages != 1 %}

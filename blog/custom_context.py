@@ -11,6 +11,5 @@ def categories_and_tags(request):
         context["Notify_Counts"] = Notify.objects.filter(
             user=request.user, read_at=None
         ).count()
-        print(context["Notify_Counts"])
 
     return context
