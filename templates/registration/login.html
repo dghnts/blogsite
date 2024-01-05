@@ -1,16 +1,31 @@
 {% extends "registration/base.html" %}
-
 {% block main %}
-
-<a href="{% url 'signup' %}">アカウント新規作成</a>
-<a href="{% url 'password_reset' %}">パスワードを忘れた</a>
-<h2>ログイン</h2>
-
-<form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="ログイン">
-</form>
-
+    <a href="{% url 'signup' %}">アカウント新規作成</a>
+    <a href="{% url 'password_reset' %}">パスワードを忘れた</a>
+    <h2>ログイン</h2>
+    <div class="row py-2">
+        <form class="col-sm-6" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            {# {{ form.as_p }}#}
+            <input class="form-control"
+                   type="text"
+                   name="username"
+                   autofocus=""
+                   autocapitalize="none"
+                   autocomplete="username"
+                   maxlength="254"
+                   required
+                   id="id_username"
+                   placeholder="mail address">
+            <input class="form-control"
+                   type="password"
+                   name="password"
+                   autocomplete="current-password"
+                   required
+                   id="id_password"
+                   placeholder="password">
+            <input class="btn btn-outline-primary" type="submit" value="ログイン">
+        </form>
+        <div class="col-sm-6">{# TODO: ここにソーシャル認証を実装 OAUTH2のキー名を各ソーシャルアカウントから発行し、settings.pyに割り当てる。 #}</div>
+    </div>
 {% endblock %}
-
