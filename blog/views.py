@@ -247,7 +247,7 @@ class UserView(LoginRequiredMixin, View):
         context = {}
 
         context["person"] = User.objects.filter(id=pk).first()
-
+        context["articles"] = Article.objects.filter(user=pk)
         # ログインしているユーザーが該当ユーザーをブロックしているか判定するフラグ
         if (
             Block.objects.filter(blocks=request.user, blockers=pk).first()
@@ -256,7 +256,7 @@ class UserView(LoginRequiredMixin, View):
             context["is_block"] = True
         else:
             context["is_block"] = False
-        print(context)
+
         return render(request, "blog/user.html", context)
 
 
