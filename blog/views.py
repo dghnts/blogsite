@@ -193,13 +193,13 @@ class ArticleView(View):
         ).exists()
 
         comments = Comment.objects.filter(article=pk)
-        
+
         paginator = Paginator(comments, 5)
-        
+
         if "page" in request.GET:
             context["comments"] = paginator.get_page(request.GET["page"])
         else:
-            context["comments"] = paginator.get_page(1) 
+            context["comments"] = paginator.get_page(1)
 
         return render(request, "blog/article.html", context)
 
@@ -272,6 +272,8 @@ class UserView(LoginRequiredMixin, View):
 
 
 userpage = UserView.as_view()
+
+
 class FollowView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         follow = Follow.objects.filter(follows=request.user, followers=pk)
@@ -353,23 +355,23 @@ class GoodArticleView(LoginRequiredMixin, View):
 
         good_form = GoodArticleForm(dic)
 
-        if good_form.is_valid():
-            good_form.save()
-        else:
+        if not good_form.is_valid():
             print(good_form.errors)
-
-        article = Article.objects.filter(id=pk).first()
-        dic_notify = {}
-        dic_notify["subject"] = "いいねがつきました"
-        dic_notify["content"] = article.title + "にいいねがつきました。"
-        dic_notify["user"] = article.user
-
-        notify_form = NotifyForm(dic_notify)
-
-        if not notify_form.is_valid():
-            print(notify_form.errors)
         else:
-            notify_form.save()
+            good_form.save()
+
+            article = Article.objects.filter(id=pk).first()
+            dic_notify = {}
+            dic_notify["subject"] = "いいねがつきました"
+            dic_notify["content"] = article.title + "にいいねがつきました。"
+            dic_notify["user"] = article.user
+
+            notify_form = NotifyForm(dic_notify)
+
+            if not notify_form.is_valid():
+                print(notify_form.errors)
+            else:
+                notify_form.save()
 
         return redirect("blog:article", pk)
 
