@@ -22,6 +22,7 @@ from .models import (
     Block,
     Report,
     Notify,
+    Comment,
 )
 from .forms import (
     CategoryForm,
@@ -36,6 +37,7 @@ from .forms import (
     ArticleTagSearchForm,
     ReportForm,
     NotifyForm,
+    CommentForm,
 )
 
 from django.contrib.auth import get_user_model
@@ -190,6 +192,15 @@ class ArticleView(View):
             article=pk, user=request.user
         ).exists()
 
+        comments = Comment.objects.filter(article=pk)
+        
+        paginator = Paginator(comments, 5)
+        
+        if "page" in request.GET:
+            context["comments"] = paginator.get_page(request.GET["page"])
+        else:
+            context["comments"] = paginator.get_page(1) 
+
         return render(request, "blog/article.html", context)
 
     def post(self, request, pk, *args, **kwargs):
@@ -197,13 +208,13 @@ class ArticleView(View):
         copied["user"] = request.user
         copied["article"] = pk
 
-        form = ReportForm(copied)
+        report_form = ReportForm(copied)
 
-        if form.is_valid():
+        if report_form.is_valid():
             print("通報完了")
-            form.save()
+            report_form.save()
         else:
-            print(form.errors)
+            print(report_form.errors)
 
         return redirect("blog:article", pk)
 
@@ -261,8 +272,6 @@ class UserView(LoginRequiredMixin, View):
 
 
 userpage = UserView.as_view()
-
-
 class FollowView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         follow = Follow.objects.filter(follows=request.user, followers=pk)
@@ -440,3 +449,22 @@ class NotifyView(LoginRequiredMixin, View):
 
 
 notify = NotifyView.as_view()
+
+
+class CommentView(View):
+    def post(self, request, pk, *args, **kwargs):
+        copied = request.POST.copy()
+        copied["user"] = request.user
+        copied["article"] = pk
+
+        comment_form = CommentForm(copied)
+
+        if comment_form.is_valid():
+            comment_form.save()
+        else:
+            print(comment_form.errors)
+
+        return redirect("blog:article", pk)
+
+
+comment = CommentView.as_view()

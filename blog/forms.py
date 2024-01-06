@@ -17,6 +17,7 @@ from .models import (
     Report,
     Notify,
     NotifyMail,
+    Comment,
 )
 
 import bleach
@@ -134,12 +135,20 @@ class ReportForm(forms.ModelForm):
         model = Report
         fields = ["user", "article", "reason", "comment"]
 
+
 class NotifyForm(forms.ModelForm):
     class Meta:
-        model   = Notify
-        fields  = ["subject","content","user"]
+        model = Notify
+        fields = ["subject", "content", "user"]
+
 
 class NotifyMailForm(forms.ModelForm):
     class Meta:
-        model   = NotifyMail
-        fields  = ["user","notify"]
+        model = NotifyMail
+        fields = ["user", "notify"]
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ["user", "content", "article"]

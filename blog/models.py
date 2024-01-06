@@ -207,3 +207,12 @@ class NotifyMail(models.Model):
 
     class Meta:
         unique_together = ("user", "notify")
+
+
+class Comment(models.Model):
+    dt = models.DateTimeField(verbose_name="コメント日時", default=timezone.now)
+    content = models.CharField(verbose_name="コメント内容", max_length=500)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, verbose_name="投稿者", on_delete=models.CASCADE
+    )
+    article = models.ForeignKey(Article, verbose_name="記事", on_delete=models.CASCADE)
