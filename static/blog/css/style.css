@@ -1,76 +1,76 @@
 /* 通知 */
 .notify_area {
     display: block;
-  font-size: 3rem;
-  color: orange;
-  position: relative;
+    font-size: 3rem;
+    color: orange;
+    position: relative;
 }
 
 .notify_amount {
-  font-size: 0.75rem;
-  display: inline-block;
-  position: absolute;
-  top: 0;
-  right: 0;
-  color: white;
-  background: crimson;
-  padding: 0.25rem 0.5rem;
-  border-radius: 1rem;
-  font-weight: bold;
+    font-size: 0.75rem;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white;
+    background: crimson;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    font-weight: bold;
 }
 
 /* 記事 */
 .article_area {
-  display: flex;
+    display: flex;
 }
 
 .article_menu {
-  flex-basis: 8rem;
+    flex-basis: 8rem;
 }
 
 .article_content {
-  flex-basis: calc(100% - 8rem);
+    flex-basis: calc(100% - 8rem);
 }
 
 /*スクロールで追従するように機能を実装*/
 .article_menu_lsit {
-  position: sticky;
-  top: 0;
+    position: sticky;
+    top: 0;
 }
 .good_area {
-  text-align: center;
+    text-align: center;
 }
 
 .good_label {
-  display: block;
-  font-size: 3rem;
-  cursor: pointer;
+    display: block;
+    font-size: 3rem;
+    cursor: pointer;
 
-  color: crimson;
+    color: crimson;
 }
 
 .good_area_description {
-  font-weight: bold;
+    font-weight: bold;
 }
 
-.report_area{
-  text-align:center;
+.report_area {
+    text-align: center;
 }
 .report_label {
-  display:block;
-  font-size:3rem;
-  cursor:pointer;
+    display: block;
+    font-size: 3rem;
+    cursor: pointer;
 
-  color:orange;
+    color: orange;
 }
-.report_area_description{
-  font-weight:bold;
+.report_area_description {
+    font-weight: bold;
 }
 
+.not_read {
+    background: orange;
+}
 
-
-
-.not_read{
-  background:orange;
-
+.dropdown-toggle::after {
+    display: none !important;
 }
