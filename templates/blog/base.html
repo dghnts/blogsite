@@ -19,7 +19,7 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
           integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
           crossorigin="anonymous"
-          referrerpolicy="no-referrer" >
+          referrerpolicy="no-referrer">
     <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
     <script>
       window.addEventListener("load",() =>{
@@ -109,18 +109,56 @@
             <a class="btn btn-outline-success" href="{% url "login" %}">ログイン</a>
           {% else %}
             {#　ログインしているときだけ表示する　#}
+            {% comment %}
             <form action="{% url "logout" %}" method="post">
               {% csrf_token %}
               <input class="btn btn-outline-success" type="submit" value="ログアウト">
             </form>
             <a class="btn btn-warning" href="{% url 'password_change' %}">パスワードの変更</a>
             <a class="btn btn-primary" href="{% url 'blog:mypage' %}">マイページ</a>
-            <a class="btn btn-success mx-2" href="{% url 'blog:create_article' %}">新規作成</a>
+            {% endcomment %}
             <a class="notify_area" href="{% url 'blog:notify' %}">
-              <i class="fa-regular fa-bell"></i>                <span class="notify_amount">{{ Notify_Counts }}</span>
-              {# 未読通知がある場合，通知数を表示する #}
-              {% if Notify_Counts != 0 %}<span class="notify_amount">{{ Notify_Counts }}</span>{% endif %}
+              <i class="fa-regular fa-bell"></i>
+              {% if Notify_Counts == 1 %}<span class="notify_amount">{{ Notify_Counts }}</span>{% endif %}
             </a>
+            <div class="flex-shrink-0 dropdown">
+              <a href="#"
+                 class="d-block link-body-emphasis text-decoration-none dropdown-toggle show"
+                 data-bs-toggle="dropdown"
+                 aria-expanded="true">
+                <img src="https://github.com/mdo.png"
+                     alt="mdo"
+                     width="42"
+                     height="42"
+                     class="rounded-circle">
+              </a>
+              <ul class="dropdown-menu text-small shadow show"
+                  data-popper-placement="bottom-end"
+                  style="position: absolute;
+                         inset: 0px 0px auto auto;
+                         margin: 0px;
+                         transform: translate3d(0px, 34px, 0px)">
+                <li>
+                  <a class="dropdown-item" href="{% url 'blog:mypage' %}">マイページ</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'password_change' %}">パスワードの変更</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#">設定</a>
+                </li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li>
+                  <form action="{% url "logout" %}" method="post">
+                    {% csrf_token %}
+                    <input class="dropdown-item" type="submit" value="ログアウト">
+                  </form>
+                </li>
+              </ul>
+            </div>
+            <a class="btn btn-success mx-2" href="{% url 'blog:create_article' %}">新規作成</a>
           {% endif %}
         </div>
       </nav>
