@@ -2,7 +2,7 @@
 {% load param_change %}
 {% block extra_head %}{% endblock %}
 {% block main %}
-    <h2>{{ request.user }}のマイページ</h2>
+    <h2>{{ request.user.username }}のマイページ</h2>
     <h3>フォロー中</h3>
     <table class="table mb-2">
         <thead>
