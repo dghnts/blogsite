@@ -109,11 +109,11 @@
       <a class="btn btn-warning" href="{% url 'password_change' %}">パスワードの変更</a>
       <a class="btn btn-primary" href="{% url 'blog:mypage' %}">マイページ</a>
         {% endcomment %}
-        <a class="notify_area mx-2" href="{% url 'blog:notify' %}">
+        <a class="notify_area mx-1" href="{% url 'blog:notify' %}">
           <i class="fa-regular fa-bell fa-xs"></i>
           {% if Notify_Counts == 1 %}<span class="notify_amount">{{ Notify_Counts }}</span>{% endif %}
         </a>
-        <div class="dropdown">
+        <div class="dropdown mx-1">
           <a class="dropidown-toggle"
              data-bs-toggle="dropdown"
              type="button"
