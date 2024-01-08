@@ -45,7 +45,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class IndexView(LoginRequiredMixin, View):
+class IndexView(View):
     def get(self, request, *args, **kwargs):
         context = {}
         query = Q()
@@ -188,9 +188,10 @@ class ArticleView(View):
         context["reasons"] = [reason[0] for reason in Report.reason.field.choices]
 
         # この記事がいいね済みか調べる。
-        context["is_good"] = GoodArticle.objects.filter(
-            article=pk, user=request.user
-        ).exists()
+        if request.user.is_authenticated:
+            context["is_good"] = GoodArticle.objects.filter(
+                article=pk, user=request.user
+            ).exists()
 
         comments = Comment.objects.filter(article=pk)
 
