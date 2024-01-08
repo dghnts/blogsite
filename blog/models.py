@@ -197,7 +197,8 @@ class Notify(models.Model):
 
             msg.send(fail_silently=False)
 
-'''
+
+"""
 class NotifyMail(models.Model):
     dt = models.DateTimeField(verbose_name="送信日時", default=timezone.now)
     user = models.ForeignKey(
@@ -207,7 +208,8 @@ class NotifyMail(models.Model):
 
     class Meta:
         unique_together = ("user", "notify")
-'''
+"""
+
 
 class Comment(models.Model):
     dt = models.DateTimeField(verbose_name="コメント日時", default=timezone.now)
