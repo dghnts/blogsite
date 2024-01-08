@@ -15,7 +15,7 @@ from .models import (
     Block,
     Report,
     Notify,
-    NotifyMail
+#    NotifyMail
 )
 
 
@@ -64,8 +64,8 @@ class ReportAdmin(admin.ModelAdmin):
 class NotifyAdmin(admin.ModelAdmin):
     list_display = ["dt", "subject", "content", "user", "read_at"]
 
-class NotifyMailAdmin(admin.ModelAdmin):
-    list_display = ["dt", "user", "notify"]
+#class NotifyMailAdmin(admin.ModelAdmin):
+#    list_display = ["dt", "user", "notify"]
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(ArticleCategory, ArticleCategoryAdmin)
@@ -78,4 +78,4 @@ admin.site.register(Follow, FollowAdmin)
 admin.site.register(Block, BlockAdmin)
 admin.site.register(Report, ReportAdmin)
 admin.site.register(Notify, NotifyAdmin)
-admin.site.register(NotifyMail,NotifyMailAdmin)
+#admin.site.register(NotifyMail,NotifyMailAdmin)

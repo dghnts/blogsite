@@ -2,8 +2,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
 from django.core.mail import EmailMessage
-from .models import Notify
-from .forms import NotifyMailForm
+#from .models import Notify
+#from .forms import NotifyMailForm
 
 
 '''

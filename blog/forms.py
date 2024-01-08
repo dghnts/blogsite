@@ -16,7 +16,7 @@ from .models import (
     Block,
     Report,
     Notify,
-    NotifyMail,
+#    NotifyMail,
     Comment,
 )
 
@@ -141,12 +141,12 @@ class NotifyForm(forms.ModelForm):
         model = Notify
         fields = ["subject", "content", "user"]
 
-
+'''
 class NotifyMailForm(forms.ModelForm):
     class Meta:
         model = NotifyMail
         fields = ["user", "notify"]
-
+'''
 
 class CommentForm(forms.ModelForm):
     class Meta:

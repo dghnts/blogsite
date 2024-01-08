@@ -1,37 +1,55 @@
 {% extends "blog/base.html" %}
 {% load param_change %}
-
-{% block extra_head %}
-{% endblock %}
-
+{% block extra_head %}{% endblock %}
 {% block main %}
     <h2>通知のページ</h2>
-
     {# TODO: 未読の場合若干背景色を変更する　#}
     {% for notify in notifies %}
         <div class="border {% if not notify.read_at %}not_read{% endif %}">
             <div>{{ notify.dt }}</div>
-            <div>{{ notify.content }}</div>
+            <div>件名：{{ notify.subject }}</div>
+            <div>内容：{{ notify.content }}</div>
             {% read_check notify %}
         </div>
     {% endfor %}
     {% if notifies.paginator.num_pages != 1 %}
         <ul class="pagination justify-content-center">
             {% if notifies.has_previous %}
-                <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' '1' %}">最初のページ</a></li>
-                <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' notifies.previous_page_number %}">前のページ</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="?{% url_replace request 'page' '1' %}">最初のページ</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?{% url_replace request 'page' notifies.previous_page_number %}">前のページ</a>
+                </li>
             {% else %}
-                <li class="page-item"><a class="page-link">最初のページ</a></li>
-                <li class="page-item"><a class="page-link">前のページ</a></li>
+                <li class="page-item">
+                    <a class="page-link">最初のページ</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">前のページ</a>
+                </li>
             {% endif %}
-                <li class="page-item"><a class="page-link">{{ notifies.number }}</a></li>
+            <li class="page-item">
+                <a class="page-link">{{ notifies.number }}</a>
+            </li>
             {% if notifies.has_next %}
-                <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' notifies.next_page_number %}">次のページ</a></li>
-                <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' notifies.paginator.num_pages %}">最後のページ</a></li>
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?{% url_replace request 'page' notifies.next_page_number %}">次のページ</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?{% url_replace request 'page' notifies.paginator.num_pages %}">最後のページ</a>
+                </li>
             {% else %}
-                <li class="page-item"><a class="page-link">次のページ</a></li>
-                <li class="page-item"><a class="page-link">最後のページ</a></li>
+                <li class="page-item">
+                    <a class="page-link">次のページ</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link">最後のページ</a>
+                </li>
             {% endif %}
-        </ul> 
+        </ul>
     {% endif %}
 {% endblock %}

@@ -424,19 +424,6 @@ class NotifyView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         context = {}
 
-        # テスト用通知
-        dic_notify = {}
-        dic_notify["subject"] = "いいねがつきました"
-        dic_notify["content"] = "これはテストです"
-        dic_notify["user"] = request.user
-
-        notify_form = NotifyForm(dic_notify)
-
-        if not notify_form.is_valid():
-            print(notify_form.errors)
-        else:
-            notify_form.save()
-
         notifies = Notify.objects.filter(user=request.user).order_by("-dt")
         paginator = Paginator(notifies, 10)
 
@@ -462,11 +449,24 @@ class CommentView(View):
 
         comment_form = CommentForm(copied)
 
-        if comment_form.is_valid():
-            comment_form.save()
-        else:
+        if not comment_form.is_valid():
             print(comment_form.errors)
+        else:
+            comment_form.save()
 
+            article = Article.objects.filter(id=pk).first()
+            dic_notify = {}
+            dic_notify["subject"] = "あなたの記事にコメントがつきました"
+            dic_notify["content"] = article.title + "にコメントがあります"
+            dic_notify["user"] = article.user
+
+            notify_form = NotifyForm(dic_notify)
+
+            if not notify_form.is_valid():
+                print(notify_form.errors)
+            else:
+                notify_form.save()
+                
         return redirect("blog:article", pk)
 
 
