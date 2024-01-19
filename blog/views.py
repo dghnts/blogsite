@@ -257,7 +257,7 @@ class MyPageView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         form = CustomUserIsNotNotifyForm(request.POST)
-        print(request.POST)
+
         if not form.is_valid():
             print(form.errors)
 
@@ -270,7 +270,7 @@ class MyPageView(LoginRequiredMixin, View):
             if selected_notify in request.user.is_not_notify.all():
                 request.user.is_not_notify.remove(selected_notify)
             else:
-                request.uesr.is_not_notify.add(selected_notify)
+                request.user.is_not_notify.add(selected_notify)
 
         return redirect("blog:mypage")
 
