@@ -169,7 +169,17 @@ class Report(models.Model):
         return self.reason
 
 
+class NotifyCategory(models.Model):
+    name = models.CharField(verbose_name="カテゴリ名", max_length=10)
+
+    def __str__(self):
+        return self.name
+
+
 class Notify(models.Model):
+    category = models.ForeignKey(
+        NotifyCategory, verbose_name="カテゴリ", on_delete=models.CASCADE, null=True
+    )
     dt = models.DateTimeField(verbose_name="通知日時", default=timezone.now)
     subject = models.CharField(
         verbose_name="件名",

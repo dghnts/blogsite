@@ -10,36 +10,38 @@ from django.core.mail import send_mail
 
 import uuid
 
+# カスタムユーザーモデルと多対多を組む。
+from blog.models import NotifyCategory
 
-#ここ( https://github.com/django/django/blob/main/django/contrib/auth/models.py#L334 )から流用
+# ここ( https://github.com/django/django/blob/main/django/contrib/auth/models.py#L334 )から流用
+
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-
     username_validator = UnicodeUsernameValidator()
 
-    id          = models.UUIDField( default=uuid.uuid4, primary_key=True, editable=False )
-    username    = models.CharField(
-                    _("username"),
-                    max_length=150,
-                    unique=True,
-                    help_text=_(
-                        "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
-                    ),
-                    validators=[username_validator],
-                    error_messages={
-                        "unique": _("A user with that username already exists."),
-                    },
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
+    username = models.CharField(
+        _("username"),
+        max_length=150,
+        unique=True,
+        help_text=_(
+            "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+        ),
+        validators=[username_validator],
+        error_messages={
+            "unique": _("A user with that username already exists."),
+        },
     )
 
-    first_name  = models.CharField(_("first name"), max_length=150, blank=True)
-    last_name   = models.CharField(_("last name"), max_length=150, blank=True)
-    email       = models.EmailField(_("email address"), unique=True)
-    is_staff    = models.BooleanField(
+    first_name = models.CharField(_("first name"), max_length=150, blank=True)
+    last_name = models.CharField(_("last name"), max_length=150, blank=True)
+    email = models.EmailField(_("email address"), unique=True)
+    is_staff = models.BooleanField(
         _("staff status"),
-        default =False,
+        default=False,
         help_text=_("Designates whether the user can log into this admin site."),
     )
-    is_active   = models.BooleanField(
+    is_active = models.BooleanField(
         _("active"),
         default=True,
         help_text=_(
@@ -48,10 +50,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
-    
-    icon        = models.ImageField(verbose_name="アイコン", upload_to="users/custom_user/icon/", blank=True, null=True)
-    
-    objects     = UserManager()
+
+    is_not_notify = models.ManyToManyField(
+        NotifyCategory, verbose_name="通知しないカテゴリ", blank=True
+    )
+    icon = models.ImageField(
+        verbose_name="アイコン", upload_to="users/custom_user/icon/", blank=True, null=True
+    )
+
+    objects = UserManager()
 
     EMAIL_FIELD = "email"
     # USERNAME_FIELDとREQUIRED_FIELDSは重複させない
@@ -61,7 +68,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = _("user")
         verbose_name_plural = _("users")
-        #abstract = True #コメントアウト
+        # abstract = True #コメントアウト
 
     def clean(self):
         super().clean()

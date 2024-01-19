@@ -3,6 +3,29 @@
 {% block extra_head %}{% endblock %}
 {% block main %}
     <h2>{{ request.user.username }}のマイページ</h2>
+    <h3>通知設定</h3>
+    <p>以下の通知はメール送信しません</p>
+    {% for notify_category in request.user.is_not_notify.all %}
+        <form action="" method="post" style="display:inline-block;">
+            {% csrf_token %}
+            <input type="hidden" name="is_not_notify" value="{{ notify_category.id }}">
+            <input class="btn btn-secondary"
+                   type="submit"
+                   value="{{ notify_category.name }}">
+        </form>
+    {% endfor %}
+    <p>以下の通知はメール送信します。</p>
+    {% for notify_category in notify_categories %}
+        {% if notify_category not in request.user.is_not_notify.all %}
+            <form action="" method="post" style="display:inline-block;">
+                {% csrf_token %}
+                <input type="hidden" name="is_not_notify" value="{{ notify_category.id }}">
+                <input class="btn btn-secondary"
+                       type="submit"
+                       value="{{ notify_category.name }}">
+            </form>
+        {% endif %}
+    {% endfor %}
     <h3>フォロー中</h3>
     <table class="table mb-2">
         <thead>

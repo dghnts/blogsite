@@ -21,6 +21,7 @@ from .models import (
     Follow,
     Block,
     Report,
+    NotifyCategory,
     Notify,
     Comment,
 )
@@ -39,6 +40,8 @@ from .forms import (
     NotifyForm,
     CommentForm,
 )
+
+from users.forms import CustomUserIsNotNotifyForm
 
 from django.contrib.auth import get_user_model
 
@@ -248,7 +251,28 @@ article_category_option_create = ArticleCategoryOptionCreateView.as_view()
 
 class MyPageView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        return render(request, "blog/mypage.html")
+        context = {}
+        context["notify_categories"] = NotifyCategory.objects.all()
+        return render(request, "blog/mypage.html", context)
+
+    def post(self, request, *args, **kwargs):
+        form = CustomUserIsNotNotifyForm(request.POST)
+        print(request.POST)
+        if not form.is_valid():
+            print(form.errors)
+
+            return redirect("blog:mypage")
+
+        cleaned = form.clean()
+        selected_notifies = cleaned["is_not_notify"]
+
+        for selected_notify in selected_notifies:
+            if selected_notify in request.user.is_not_notify.all():
+                request.user.is_not_notify.remove(selected_notify)
+            else:
+                request.uesr.is_not_notify.add(selected_notify)
+
+        return redirect("blog:mypage")
 
 
 mypage = MyPageView.as_view()
@@ -466,7 +490,7 @@ class CommentView(View):
                 print(notify_form.errors)
             else:
                 notify_form.save()
-                
+
         return redirect("blog:article", pk)
 
 
