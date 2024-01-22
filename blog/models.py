@@ -197,28 +197,19 @@ class Notify(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
-        if not self.read_at:
-            msg = EmailMessage(
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[self.user.email],
-                subject=self.subject,
-                body=self.content,
-            )
-
-            msg.send(fail_silently=False)
-
-
-"""
-class NotifyMail(models.Model):
-    dt = models.DateTimeField(verbose_name="送信日時", default=timezone.now)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, verbose_name="受信者", on_delete=models.CASCADE
-    )
-    notify = models.ForeignKey(Notify, verbose_name="メールする通知", on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ("user", "notify")
-"""
+        print(self.category)
+        # TODO: 通知のカテゴリがis_not_notifyに登録されていないとき，メールを送信する
+        if self.category in self.user.is_not_notify.all():
+            self.delete()
+        else:
+            if not self.read_at:
+                msg = EmailMessage(
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to=[self.user.email],
+                    subject=self.subject,
+                    body=self.content,
+                )
+                msg.send(fail_silently=False)
 
 
 class Comment(models.Model):

@@ -226,6 +226,47 @@ class ArticleView(View):
 article = ArticleView.as_view()
 
 
+class ArticleEditView(LoginRequiredMixin, View):
+    def get(self, request, pk, *args, **kwargs):
+        context = {}
+        article = Article.objects.filter(id=pk, user=request.user).first()
+
+        if not article:
+            return redirect("blog:index")
+
+        context["article"] = article
+
+        # 選択したカテゴリとタグの設定
+        context["categories"] = Category.objects.all()
+        context["article_categories"] = ArticleCategory.objects.filter(
+            category=article.article_category.category
+        )
+
+        context["tags"] = ArticleTag.objects.all()
+
+        context["form"] = ArticleForm(instance=article)
+
+        return render(request, "blog/edit_article.html", context)
+
+    def post(self, request, pk, *args, **kwargs):
+        article = Article.objects.filter(id=pk).first()
+
+        copied = request.POST.copy()
+        copied["user"] = request.user
+
+        form = ArticleForm(copied, instance=article)
+
+        if form.is_valid():
+            form.save()
+        else:
+            print(form.errors)
+
+        return redirect("blog:article", pk)
+
+
+edit_article = ArticleEditView.as_view()
+
+
 class ArticleCategoryOptionCreateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         data = {"error": True}
@@ -320,6 +361,7 @@ class FollowView(LoginRequiredMixin, View):
                 print(follow_form.errors)
 
             dic_notify = {}
+            dic_notify["category"] = NotifyCategory.objects.filter(name="フォロー").first()
             dic_notify["subject"] = "フォローされました"
             dic_notify["content"] = request.user.username + "にフォローされました。"
             dic_notify["user"] = pk
@@ -387,6 +429,7 @@ class GoodArticleView(LoginRequiredMixin, View):
 
             article = Article.objects.filter(id=pk).first()
             dic_notify = {}
+            dic_notify["category"] = NotifyCategory.objects.filter(name="いいね").first()
             dic_notify["subject"] = "いいねがつきました"
             dic_notify["content"] = article.title + "にいいねがつきました。"
             dic_notify["user"] = article.user
@@ -480,6 +523,7 @@ class CommentView(View):
 
             article = Article.objects.filter(id=pk).first()
             dic_notify = {}
+            dic_notify["category"] = NotifyCategory.objects.filter(name="コメント").first()
             dic_notify["subject"] = "あなたの記事にコメントがつきました"
             dic_notify["content"] = article.title + "にコメントがあります"
             dic_notify["user"] = article.user

@@ -16,8 +16,9 @@ from .models import (
     Report,
     NotifyCategory,
     Notify,
-    #    NotifyMail
 )
+
+from .forms import ArticleForm
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -27,11 +28,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class ArticleCategoryAdmin(admin.ModelAdmin):
     list_display = ["category", "name"]
 
-
-"""
-class TagAdmin(admin.ModelAdmin):
-    list_display	= [ "name" ]
-"""
+    search_fields = ["name"]
 
 
 class ArticleTagAdmin(admin.ModelAdmin):
@@ -39,7 +36,13 @@ class ArticleTagAdmin(admin.ModelAdmin):
 
 
 class ArticleAdmin(admin.ModelAdmin):
+    form = ArticleForm
+
     list_display = ["dt", "title", "article_category", "content", "user"]
+
+    filter_horizontal = ["article_tag", "good"]
+
+    autocomplete_fields = ["user", "article_category"]
 
 
 class GoodArticleAdmin(admin.ModelAdmin):
@@ -69,13 +72,12 @@ class NotifyCategoryAdmin(admin.ModelAdmin):
 class NotifyAdmin(admin.ModelAdmin):
     list_display = ["dt", "subject", "content", "user", "read_at"]
 
+    def save_model(self, request, obj, form, change):
+        super(NotifyAdmin, self).save_model(request, obj, form, change)
 
-# class NotifyMailAdmin(admin.ModelAdmin):
-#    list_display = ["dt", "user", "notify"]
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(ArticleCategory, ArticleCategoryAdmin)
-# admin.site.register(Tag,TagAdmin)
 admin.site.register(ArticleTag, ArticleTagAdmin)
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(GoodArticle, GoodArticleAdmin)

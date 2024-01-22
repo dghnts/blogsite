@@ -163,6 +163,11 @@
                     <input type="submit" value="{% follow_checked request article.user.id %}" />
                 </form>
             {% endif %}
+            {% if request.user == article.user %}
+                <div>
+                    <a href="{% url 'blog:edit_article' article.id %}">編集する</a>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

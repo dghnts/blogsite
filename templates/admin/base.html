@@ -1,0 +1,20 @@
+{% extends 'admin/base.html' %}
+{% block extrastyle %}
+    {{ block.super }}
+    <style></style>
+    <script>
+window.addEventListener("load", () => {
+
+    const pathname = window.location.pathname
+    if (/admin\/blog\/article\/\d*\/change\//.test(pathname)){
+        const field_content = document.querySelector(".field-content");
+        const elems = field_content.querySelectorAll(".flex-container");
+        for (let elem of elems ){
+            elem.classList.remove("flex-container");
+        }    
+    }
+
+});
+    </script>
+{% endblock %}
+j:window.addEventListener
