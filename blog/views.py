@@ -1,16 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views import View
-
 from django.contrib.auth.mixins import LoginRequiredMixin
-
 from django.http.response import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
-
 from django.utils import timezone
 import datetime
-
-from collections import defaultdict
 
 from .models import (
     Category,
@@ -26,9 +21,6 @@ from .models import (
     Comment,
 )
 from .forms import (
-    CategoryForm,
-    ArticleCategoryForm,
-    ArticleTagForm,
     ArticleForm,
     GoodArticleForm,
     FollowForm,
@@ -40,12 +32,16 @@ from .forms import (
     NotifyForm,
     CommentForm,
 )
-
 from users.forms import CustomUserIsNotNotifyForm
-
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
+
+
+# ページネーションを生成する関数
+def create_paginator(queryset, page_number, items=5):
+    paginator = Paginator(queryset, items)
+    return paginator.get_page(page_number)
 
 
 class IndexView(View):
@@ -59,29 +55,23 @@ class IndexView(View):
         # 検索キーワードが存在するとき，キーワードをlist型として保存する
         if "title_search" in request.GET and request.GET["title_search"] != "":
             raw_words = request.GET["title_search"].replace("　", " ").split(" ")
-
             words = [w for w in raw_words if w != ""]
-
             for w in words:
                 query &= Q(title__contains=w)
 
         # カテゴリ検索ありの時、queryに追加する。
         article_category_search_form = ArticleCategorySearchForm(request.GET)
-
         if article_category_search_form.is_valid():
             cleaned = article_category_search_form.clean()
-
             query &= Q(article_category=cleaned["article_category"].id)
 
         articles = Article.objects.filter(query).order_by("-dt")
 
         # 　Tag検索ありのとき，queryに条件を追加する
         article_tag_search_form = ArticleTagSearchForm(request.GET)
-
         if article_tag_search_form.is_valid():
             cleaned = article_tag_search_form.clean()
             selected_tags = cleaned["article_tag"]
-
             if selected_tags:
                 for tag in selected_tags:
                     articles = [
@@ -91,28 +81,23 @@ class IndexView(View):
                     ]
 
         # ページネーションの設定
-        paginator = Paginator(articles, 5)
+        print(request.GET.get("page", 1))
+        context["articles"] = create_paginator(articles, request.GET.get("page", 1), 5)
 
-        if "page" in request.GET:
-            context["articles"] = paginator.get_page(request.GET["page"])
-        else:
-            context["articles"] = paginator.get_page(1)
-
-        # article_tagをそのタグ付けされている記事の多い順に並べたリストを作成
-        dict_tags = []
-        for article_tag in ArticleTag.objects.all():
-            dict_tags.append(
-                {"article_tag": article_tag, "counts": article_tag.count_articles()}
-            )
+        # トレンドタグの設定
+        dict_tags = [
+            {"article_tag": article_tag, "counts": article_tag.count_articles()}
+            for article_tag in ArticleTag.objects.all()
+        ]
         dict_tags = sorted(dict_tags, reverse=True, key=lambda x: x["counts"])
 
         context["trend_tags"] = [dict_tag["article_tag"] for dict_tag in dict_tags][:5]
 
         # ログインしている場合ブロックしているユーザーのリストを作成
-        context["blocked_users"] = []
         if request.user.is_authenticated:
-            for blocked in request.user.blocking_user.all():
-                context["blocked_users"].append(blocked.blockers)
+            context["blocked_users"] = [
+                blocked.blockers for blocked in request.user.blocking_user.all()
+            ]
 
         return render(request, "blog/index.html", context)
 
@@ -139,12 +124,9 @@ class FollowingTimeLineView(LoginRequiredMixin, View):
         )
 
         # ページネーションの実装。
-        paginator = Paginator(followers_artciles_list, 4)
-
-        if "page" in request.GET:
-            context["articles"] = paginator.get_page(request.GET["page"])
-        else:
-            context["articles"] = paginator.get_page(1)
+        context["articles"] = create_paginator(
+            followers_artciles_list, request.GET.get("page", 1), 4
+        )
 
         return render(request, "blog/index.html", context)
 
@@ -198,12 +180,7 @@ class ArticleView(View):
 
         comments = Comment.objects.filter(article=pk)
 
-        paginator = Paginator(comments, 5)
-
-        if "page" in request.GET:
-            context["comments"] = paginator.get_page(request.GET["page"])
-        else:
-            context["comments"] = paginator.get_page(1)
+        context["comments"] = create_paginator(comments, request.GET.get("page", 1), 5)
 
         return render(request, "blog/article.html", context)
 
@@ -340,6 +317,20 @@ class UserView(LoginRequiredMixin, View):
 userpage = UserView.as_view()
 
 
+def create_notification(user, category_name, subject, content):
+    dic_notify = {
+        "category": NotifyCategory.objects.filter(name=category_name).first(),
+        "subject": subject,
+        "content": content,
+        "user": user,
+    }
+    notify_form = NotifyForm(dic_notify)
+    if notify_form.is_valid():
+        notify_form.save()
+    else:
+        print(notify_form.errors)
+
+
 class FollowView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         follow = Follow.objects.filter(follows=request.user, followers=pk)
@@ -360,18 +351,12 @@ class FollowView(LoginRequiredMixin, View):
             else:
                 print(follow_form.errors)
 
-            dic_notify = {}
-            dic_notify["category"] = NotifyCategory.objects.filter(name="フォロー").first()
-            dic_notify["subject"] = "フォローされました"
-            dic_notify["content"] = request.user.username + "にフォローされました。"
-            dic_notify["user"] = pk
-
-            notify_form = NotifyForm(dic_notify)
-
-            if notify_form.is_valid():
-                notify_form.save()
-            else:
-                print(notify_form.errors)
+            create_notification(
+                pk,
+                "フォロー",
+                "フォローされました",
+                f"{request.user.username}にフォローされました。",
+            )
 
         return redirect("blog:userpage", pk=pk)
 
@@ -428,18 +413,13 @@ class GoodArticleView(LoginRequiredMixin, View):
             good_form.save()
 
             article = Article.objects.filter(id=pk).first()
-            dic_notify = {}
-            dic_notify["category"] = NotifyCategory.objects.filter(name="いいね").first()
-            dic_notify["subject"] = "いいねがつきました"
-            dic_notify["content"] = article.title + "にいいねがつきました。"
-            dic_notify["user"] = article.user
 
-            notify_form = NotifyForm(dic_notify)
-
-            if not notify_form.is_valid():
-                print(notify_form.errors)
-            else:
-                notify_form.save()
+            create_notification(
+                article.user,
+                "いいね",
+                "いいねがつきました",
+                f"{article.title}にいいねがつきました。",
+            )
 
         return redirect("blog:article", pk)
 
@@ -522,18 +502,13 @@ class CommentView(View):
             comment_form.save()
 
             article = Article.objects.filter(id=pk).first()
-            dic_notify = {}
-            dic_notify["category"] = NotifyCategory.objects.filter(name="コメント").first()
-            dic_notify["subject"] = "あなたの記事にコメントがつきました"
-            dic_notify["content"] = article.title + "にコメントがあります"
-            dic_notify["user"] = article.user
-
-            notify_form = NotifyForm(dic_notify)
-
-            if not notify_form.is_valid():
-                print(notify_form.errors)
-            else:
-                notify_form.save()
+            # FollowViewでの通知作成
+            create_notification(
+                article.user,
+                "コメント",
+                "あなたの記事にコメントがつきました",
+                f"{article.title}にコメントがあります",
+            )
 
         return redirect("blog:article", pk)
 
