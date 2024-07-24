@@ -8,14 +8,66 @@ body {
 main {
     position: absolute;
 
-    height: 80vh;
+    height: 90vh;
     width: 80vw;
 
     top: 50%;
     left: 50%;
-    transform: translate(-50% , -50%);
+    transform: translate(-50%, -50%);
 
     border: solid 1px black;
 
     padding: 2rem;
+}
+
+/* カードのスタイル */
+.card {
+    background-color: #fff;
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+    .card {
+        padding: 1rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+/* ボタンのホバーエフェクト */
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+/* フォーム要素のフォーカスエフェクト */
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.btn-google {
+    background-color: #db4437;
+    color: #fff;
+    border: none;
+    margin-right: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-google:hover {
+    background-color: #c23321;
+    color: #fff;
 }

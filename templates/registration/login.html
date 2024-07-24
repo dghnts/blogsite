@@ -1,48 +1,48 @@
 {% extends "registration/base.html" %}
 {% block main %}
-    <h2>ログイン</h2>
-    アカウントを持っていない方→<a href="{% url 'signup' %}">アカウント新規作成</a>
-    <div class="row p-2">
-        <form class="col-sm-6" method="post" action="{% url 'login' %}">
-            {% csrf_token %}
-            {# {{ form.as_p }}#}
-            <input class="form-control border-dark my-2"
-                   type="text"
-                   name="username"
-                   autofocus=""
-                   autocapitalize="none"
-                   autocomplete="username"
-                   maxlength="254"
-                   required
-                   id="id_username"
-                   placeholder="mail address">
-            <input class="form-control border-dark my-2"
-                   type="password"
-                   name="password"
-                   autocomplete="current-password"
-                   required
-                   id="id_password"
-                   placeholder="password">
-            <a href="{% url 'password_reset' %}" class="d-block my-2">パスワードを忘れた場合</a>
-            <input class="btn btn-outline-primary form-contorol"
-                   type="submit"
-                   value="ログイン">
-        </form>
-        <div class="col-sm-6 d-flex align-items-center justify-content-center">
-            <ul class="list-group" style="list-style:none">
-                <li id="google_login" class="list-group-item">
-                    <a href="{% url 'social:begin' 'google-oauth2' %}">
-                        <i class="fab fa-google fa-fw"></i>
-                    Googleでログイン</a>
-                </li>
-                {% comment %}
-                <li id="twitter_login" class="list-group-item">
-                    <a href='{% url 'social:begin' 'twitter' %}'>
-                        <i class="fab fa-x-twitter fa-fw"></i>
-                    X(Twitter)でログイン</a>
-                </li>
-                {% endcomment %}
-            </ul>
+    <div class="container-fluid d-flex justify-content-center align-items-center">
+        <div class="card shadow p-4 mb-5 bg-white rounded"
+             style="max-width: 500px;
+                    width:100%">
+            <h2>ログイン</h2>
+            アカウントを持っていない方→<a href="{% url 'signup' %}">アカウント新規作成</a>
+            {% if form.errors %}<div class="alert alert-danger mt-2" role="alert">ユーザー名またはパスワードが間違っています。</div>{% endif %}
+            <form class="col-12" method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">メールアドレス</label>
+                    <input class="form-control border-dark my-2"
+                           type="text"
+                           name="username"
+                           autofocus=""
+                           autocapitalize="none"
+                           autocomplete="username"
+                           maxlength="254"
+                           required
+                           id="id_username"
+                           placeholder="mail address">
+                </div>
+                <div class="mb-3">
+                    <label for="id_password" class="form-label">パスワード</label>
+                    <input class="form-control border-dark my-2"
+                           type="password"
+                           name="password"
+                           autocomplete="current-password"
+                           required
+                           id="id_password"
+                           placeholder="password">
+                </div>
+                <a href="{% url 'password_reset' %}" class="d-block my-2">パスワードを忘れた場合</a>
+                <button class="btn btn-primary w-100 mt-3" type="submit">ログイン</button>
+            </form>
+            <hr class="my-4">
+            <div class="d-flex justify-content-center">
+                <a href="{% url 'social:begin' 'google-oauth2' %}"
+                   id="google_login"
+                   class="btn btn-google w-100 mt-2">
+                    <i class="fab fa-google fa-fw"></i>
+                Googleでログイン</a>
+            </div>
         </div>
     </div>
 {% endblock %}
