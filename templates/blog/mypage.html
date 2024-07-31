@@ -2,21 +2,11 @@
 {% load param_change %}
 {% block extra_head %}{% endblock %}
 {% block main %}
-    <h2>{{ request.user.username }}のマイページ</h2>
-    <h3>通知設定</h3>
-    <p>以下の通知はメール送信しません</p>
-    {% for notify_category in request.user.is_not_notify.all %}
-        <form action="" method="post" style="display:inline-block;">
-            {% csrf_token %}
-            <input type="hidden" name="is_not_notify" value="{{ notify_category.id }}">
-            <input class="btn btn-secondary"
-                   type="submit"
-                   value="{{ notify_category.name }}">
-        </form>
-    {% endfor %}
-    <p>以下の通知はメール送信します。</p>
-    {% for notify_category in notify_categories %}
-        {% if notify_category not in request.user.is_not_notify.all %}
+    <div class="container mt-4">
+        <h2>{{ request.user.username }}のマイページ</h2>
+        <h3>通知設定</h3>
+        <p>以下の通知はメール送信しません</p>
+        {% for notify_category in request.user.is_not_notify.all %}
             <form action="" method="post" style="display:inline-block;">
                 {% csrf_token %}
                 <input type="hidden" name="is_not_notify" value="{{ notify_category.id }}">
@@ -24,106 +14,118 @@
                        type="submit"
                        value="{{ notify_category.name }}">
             </form>
-        {% endif %}
-    {% endfor %}
-    <h3>フォロー中</h3>
-    <table class="table mb-2">
-        <thead>
-            <tr>
-                <th>名前</th>
-                <th>フォロー状況</th>
-                <th>ブロック</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for following_object in request.user.following_user.all %}
+        {% endfor %}
+        <p>以下の通知はメール送信します。</p>
+        {% for notify_category in notify_categories %}
+            {% if notify_category not in request.user.is_not_notify.all %}
+                <form action="" method="post" style="display:inline-block;">
+                    {% csrf_token %}
+                    <input type="hidden" name="is_not_notify" value="{{ notify_category.id }}">
+                    <input class="btn btn-secondary"
+                           type="submit"
+                           value="{{ notify_category.name }}">
+                </form>
+            {% endif %}
+        {% endfor %}
+        <h3>フォロー中</h3>
+        <table class="table mb-2">
+            <thead>
                 <tr>
-                    <td>
-                        <a class="me-2"
-                           href="{% url 'blog:userpage'  following_object.followers.id %}">{{ following_object.followers.username }}</a>
-                    </td>
-                    <td>
-                        <form class="d-inline"
-                              action="{% url 'blog:follow' following_object.followers.id %}"
-                              method="post">
-                            {% csrf_token %}
-                            <input type="submit"
-                                   value="{% follow_checked request following_object.followers %}">
-                        </form>
-                    </td>
-                    <td>
-                        <form class="d-inlie"
-                              action="{% url 'blog:block' following_object.followers.id %}"
-                              method="post">
-                            {% csrf_token %}
-                            <input type="submit" value="ブロック">
-                        </form>
-                    </td>
+                    <th>名前</th>
+                    <th>フォロー状況</th>
+                    <th>ブロック</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <h3>フォロワー</h3>
-    <table class="table mb-2">
-        <thead>
-            <tr>
-                <th>名前</th>
-                <th>フォロー状況</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for followed_object in request.user.followed_user.all %}
+            </thead>
+            <tbody>
+                {% for following_object in request.user.following_user.all %}
+                    <tr>
+                        <td>
+                            <a class="me-2"
+                               href="{% url 'blog:userpage'  following_object.followers.id %}">{{ following_object.followers.username }}</a>
+                        </td>
+                        <td>
+                            <form class="d-inline"
+                                  action="{% url 'blog:follow' following_object.followers.id %}"
+                                  method="post">
+                                {% csrf_token %}
+                                <input type="submit"
+                                       value="{% follow_checked request following_object.followers %}">
+                            </form>
+                        </td>
+                        <td>
+                            <form class="d-inlie"
+                                  action="{% url 'blog:block' following_object.followers.id %}"
+                                  method="post">
+                                {% csrf_token %}
+                                <input type="submit" value="ブロック">
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h3>フォロワー</h3>
+        <table class="table mb-2">
+            <thead>
                 <tr>
-                    <td>
-                        <a class="me-2"
-                           href="{% url 'blog:userpage' followed_object.follows.id %}">{{ followed_object.follows.username }}</a>
-                    </td>
-                    <td>
-                        <form class="d-inline"
-                              action="{% url 'blog:follow' followed_object.follows.id %}"
-                              method="post">
-                            {% csrf_token %}
-                            <input type="submit"
-                                   value="{% follow_checked request followed_object.follows %}">
-                        </form>
-                    </td>
-                    <td>
-                        <form class="d-inlie"
-                              action="{% url 'blog:block' followed_object.follows.id %}"
-                              method="post">
-                            {% csrf_token %}
-                            <input type="submit" value="ブロック">
-                        </form>
-                    </td>
+                    <th>名前</th>
+                    <th>フォロー状況</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <h3>ブロック中</h3>
-    <table class="table mb-2">
-        <thead>
-            <tr>
-                <th>名前</th>
-                <th>ブロック</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for blocking_object in request.user.blocking_user.all %}
+            </thead>
+            <tbody>
+                {% for followed_object in request.user.followed_user.all %}
+                    <tr>
+                        <td>
+                            <a class="me-2"
+                               href="{% url 'blog:userpage' followed_object.follows.id %}">{{ followed_object.follows.username }}</a>
+                        </td>
+                        <td>
+                            <form class="d-inline"
+                                  action="{% url 'blog:follow' followed_object.follows.id %}"
+                                  method="post">
+                                {% csrf_token %}
+                                <input type="submit"
+                                       value="{% follow_checked request followed_object.follows %}">
+                            </form>
+                        </td>
+                        <td>
+                            <form class="d-inlie"
+                                  action="{% url 'blog:block' followed_object.follows.id %}"
+                                  method="post">
+                                {% csrf_token %}
+                                <input type="submit" value="ブロック">
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h3>ブロック中</h3>
+        <table class="table mb-2">
+            <thead>
                 <tr>
-                    <td>
-                        <a class="me-2"
-                           href="{% url 'blog:userpage' blocking_object.blockers.id %}">{{ blocking_object.blockers.username }}</a>
-                    </td>
-                    <td>
-                        <form class="d-inlie"
-                              action="{% url 'blog:block' blocking_object.blockers.id %}"
-                              method="post">
-                            {% csrf_token %}
-                            <input type="submit" value="ブロック解除">
-                        </form>
-                    </td>
+                    <th>名前</th>
+                    <th>ブロック</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for blocking_object in request.user.blocking_user.all %}
+                    <tr>
+                        <td>
+                            <a class="me-2"
+                               href="{% url 'blog:userpage' blocking_object.blockers.id %}">{{ blocking_object.blockers.username }}</a>
+                        </td>
+                        <td>
+                            <form class="d-inlie"
+                                  action="{% url 'blog:block' blocking_object.blockers.id %}"
+                                  method="post">
+                                {% csrf_token %}
+                                <input type="submit" value="ブロック解除">
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
