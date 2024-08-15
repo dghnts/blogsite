@@ -13,7 +13,17 @@ import uuid
 # カスタムユーザーモデルと多対多を組む。
 from blog.models import NotifyCategory
 
+import os
+
 # ここ( https://github.com/django/django/blob/main/django/contrib/auth/models.py#L334 )から流用
+
+
+def rename_user_icon_path(user, filename):
+    # 元のファイル名を名前と拡張子の部分に分割
+    ext = filename.split(".")[-1]
+    new_filename = f"{user.username}.{ext}"
+
+    return os.path.join("user/images/", new_filename)
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -55,7 +65,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         NotifyCategory, verbose_name="通知しないカテゴリ", blank=True
     )
     icon = models.ImageField(
-        verbose_name="アイコン", upload_to="users/custom_user/icon/", blank=True, null=True
+        verbose_name="アイコン", upload_to=rename_user_icon_path, blank=True, null=True
     )
 
     objects = UserManager()

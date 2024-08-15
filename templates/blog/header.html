@@ -1,4 +1,5 @@
 {% load param_change %}
+{% load static %}
 <a href="{% url 'blog:index' %}"
 class="d-flex align-items-center col-md-auto mx-3 text-dark text-decoration-none">
 <h3>ブログサイト</h3>
@@ -65,11 +66,12 @@ class="d-flex align-items-center col-md-auto mx-3 text-dark text-decoration-none
       type="button"
       data-bs-auto-close="false"
       aria-expanded="true">
-     {% if request.user.icon %}
-       <img src="" alt="ユーザー画像" width="42" height="42" class="rounded-circle">
-     {% else %}
-       <i class="fa-solid fa-user fa-2xl"></i>
-     {% endif %}
+      <img 
+      src={% if request.user.icon %}
+      "/media/{{request.user.icon}}"
+      {% else %}
+      {% static "/images/default_user_icon.svg" %}
+      {% endif %} alt="ユーザー画像" width="42" height="42" class="rounded-circle">
    </a>
    <ul class="dropdown-menu dropdown-menu-end my-3">
      <li>
