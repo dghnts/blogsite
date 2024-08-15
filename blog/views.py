@@ -532,15 +532,10 @@ settings = SettingsView.as_view()
 
 class UploadUserImage(View):
     def post(self, request, *args, **kwargs):
-        user = request.user
         # 現在のプロフィール画像のパスを取得する
-        old_image_path = user.icon.path if user.icon else None
+        old_image_path = request.user.icon.path if request.user.icon else None
 
-        copied = request.POST.copy()
-        copied["username"] = user.username
-        copied["email"] = user.email
-
-        form = IconForm(copied, request.FILES, instance=request.user)
+        form = IconForm(request.POST, request.FILES, instance=request.user)
 
         if not form.is_valid():
             errors = form.errors.get_json_data()
