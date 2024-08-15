@@ -273,25 +273,6 @@ class MyPageView(LoginRequiredMixin, View):
         context["notify_categories"] = NotifyCategory.objects.all()
         return render(request, "blog/mypage.html", context)
 
-    def post(self, request, *args, **kwargs):
-        form = CustomUserIsNotNotifyForm(request.POST)
-
-        if not form.is_valid():
-            print(form.errors)
-
-            return redirect("blog:mypage")
-
-        cleaned = form.clean()
-        selected_notifies = cleaned["is_not_notify"]
-
-        for selected_notify in selected_notifies:
-            if selected_notify in request.user.is_not_notify.all():
-                request.user.is_not_notify.remove(selected_notify)
-            else:
-                request.user.is_not_notify.add(selected_notify)
-
-        return redirect("blog:mypage")
-
 
 mypage = MyPageView.as_view()
 
@@ -514,3 +495,44 @@ class CommentView(View):
 
 
 comment = CommentView.as_view()
+
+
+class SettingsView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        context = {}
+        context["notify_categories"] = NotifyCategory.objects.all()
+        return render(request, "blog/settings.html", context)
+
+    def post(self, request, *args, **kwargs):
+        form = CustomUserIsNotNotifyForm(request.POST)
+
+        if not form.is_valid():
+            print(form.errors)
+
+            return redirect("blog:mypage")
+
+        cleaned = form.clean()
+        selected_notifies = cleaned["is_not_notify"]
+
+        for selected_notify in selected_notifies:
+            if selected_notify in request.user.is_not_notify.all():
+                request.user.is_not_notify.remove(selected_notify)
+            else:
+                request.user.is_not_notify.add(selected_notify)
+        print(request.user.is_not_notify.all())
+
+        return redirect("blog:settings")
+
+
+settings = SettingsView.as_view()
+
+
+class EditUserInfo(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "blog/profile.html")
+
+    def post(self, request, *args, **kwargs):
+        return redirect("blog:mypage")
+
+
+edituserinfo = EditUserInfo.as_view()

@@ -1,3 +1,4 @@
+from base import *
 from pathlib import Path
 import os
 
@@ -12,7 +13,7 @@ DEFAULT_FROM_EMAIL = "example@example.com"
 
 ALLOWED_HOSTS = ["std-blogsite.com"]
 
-CSRF_TRUSTED_ORIGINS    = [ "https://std-blogsite.com" ]
+CSRF_TRUSTED_ORIGINS = ["https://std-blogsite.com"]
 
 DATABASES = {
     "default": {

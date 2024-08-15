@@ -1,0 +1,11 @@
+<form action="" method="POST" class="form-check form-switch" data-id="{{ notify_category.id }}">
+    {% csrf_token %}
+    <input type="hidden" name="is_not_notify" data-id="{{ notify_category.id }}" value="{{ notify_category.id }}">
+    <label type="form-check-label" for="{{ notify_category.name }}" data-id="{{ notify_category.id }}">{{ notify_category.name }}</label>
+    <input class="form-check-input"
+           type="checkbox"
+           role="switch"
+           id="{{ notify_category.name }}"
+           data-id="{{ notify_category.id }}"
+           {% if notify_category not in request.user.is_not_notify.all %}checked{% endif %}>
+</form>
