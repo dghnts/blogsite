@@ -22,5 +22,5 @@ urlpatterns = [
     path("notify/", views.notify, name="notify"),
     path("comment/<int:pk>/", views.comment, name="comment"),
     path("settings/", views.settings, name="settings"),
-    path("profile/", views.edituserinfo, name="edituserinfo"),
+    path("uploadicon/", views.uploadusericon, name="uploadusericon"),
 ]

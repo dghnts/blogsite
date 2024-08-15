@@ -14,3 +14,9 @@ class CustomUserIsNotNotifyForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ("is_not_notify",)
+
+
+class IconForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ("icon",)

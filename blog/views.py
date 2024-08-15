@@ -6,6 +6,8 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.utils import timezone
 import datetime
+import os
+from django.contrib import messages
 
 from .models import (
     Category,
@@ -32,7 +34,7 @@ from .forms import (
     NotifyForm,
     CommentForm,
 )
-from users.forms import CustomUserIsNotNotifyForm
+from users.forms import CustomUserIsNotNotifyForm, IconForm
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -501,6 +503,7 @@ class SettingsView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         context = {}
         context["notify_categories"] = NotifyCategory.objects.all()
+        print(request.user.icon.path)
         return render(request, "blog/settings.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -527,12 +530,30 @@ class SettingsView(LoginRequiredMixin, View):
 settings = SettingsView.as_view()
 
 
-class EditUserInfo(View):
-    def get(self, request, *args, **kwargs):
-        return render(request, "blog/profile.html")
-
+class UploadUserImage(View):
     def post(self, request, *args, **kwargs):
-        return redirect("blog:mypage")
+        user = request.user
+        # 現在のプロフィール画像のパスを取得する
+        old_image_path = user.icon.path if user.icon else None
+
+        copied = request.POST.copy()
+        copied["username"] = user.username
+        copied["email"] = user.email
+
+        form = IconForm(copied, request.FILES, instance=request.user)
+
+        if not form.is_valid():
+            errors = form.errors.get_json_data()
+            for e in errors:
+                messages.error(request, e)
+        else:
+            if os.path.exists(old_image_path):
+                os.remove(old_image_path)
+                print("ファイルを削除しました")
+
+            form.save()
+
+        return redirect("blog:settings")
 
 
-edituserinfo = EditUserInfo.as_view()
+uploadusericon = UploadUserImage.as_view()
