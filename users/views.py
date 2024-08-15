@@ -41,7 +41,6 @@ class CustomLogoutView(LogoutView):
 
 logout  = CustomLogoutView.as_view()
 
-
 password_change             = PasswordChangeView.as_view()
 password_change_done        = PasswordChangeDoneView.as_view()
 password_reset              = PasswordResetView.as_view()

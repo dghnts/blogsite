@@ -21,4 +21,6 @@ urlpatterns = [
     path("block/<uuid:pk>/", views.block, name="block"),
     path("notify/", views.notify, name="notify"),
     path("comment/<int:pk>/", views.comment, name="comment"),
+    path("settings/", views.settings, name="settings"),
+    path("profile/", views.edituserinfo, name="edituserinfo"),
 ]
