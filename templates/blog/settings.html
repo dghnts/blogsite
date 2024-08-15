@@ -7,6 +7,9 @@
 {% block main %}
 <div class="container">
     <div id="profile" class="border-bottom py-2">
+        <div class="user_name">
+            {{ request.user.username }}
+        </div>
         <form action="{% url "blog:uploadusericon" %}" method="POST" accept="image/*" enctype="multipart/form-data" id="icon_form">
             {% csrf_token %}
             <input type="file" id="icon" name="icon" style="display:none;">
@@ -18,10 +21,7 @@
                 {% static "/images/default_user_icon.svg" %}
                 {% endif %} alt="ユーザー画像" width="42" height="42" class="rounded-circle">
             </label>
-
         </form>
-        {{ request.user.username }}
-        {# <a href="{% url "blog:edituserimage" %}" class="btn btn-secondary">編集</a> #}
     </div>
     <div class="border-bottom py-2">
         <h3 id="notify_setting" class="border-bottom">通知設定</h3>
@@ -31,7 +31,7 @@
     </div>
     <div id="password_setting" class="border-bottom">
         <h3 class="border-bottom">パスワードの変更</h3>
-        <a class="dropdown-item" href="{% url 'password_change' %}">パスワードの変更</a>    
+        パスワードの変更は<a href="{% url 'password_change' %}">こちら</a>    
     </div>
 </div>
 
