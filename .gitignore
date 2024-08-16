@@ -2,6 +2,7 @@ text.md
 venv
 .env
 
-+.sqlite3
+*.sqlite3
 */migrations
 */fixture
+config/db.sqlite3
