@@ -1,6 +1,9 @@
 body {
-    background-color: var(--primary-color);
     color: var(--text-color);
+}
+
+main {
+    background-color: var(--secondary-color);
 }
 
 /* 通知 */
@@ -187,4 +190,3 @@ body {
 .pagination .page-item.disabled .page-link {
     color: #6c757d;
 }
-

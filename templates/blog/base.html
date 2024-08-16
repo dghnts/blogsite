@@ -44,9 +44,9 @@
     {% block extra_head %}{% endblock %}
   </head>
   <body>
-    <header class="d-flex flex-wrap align-items-center justify-content-between py-3 mb-4 border-bottom">
-      {% include "blog/header.html" %}
-    </header>
-    {% block main %}{% endblock %}
+    {% include "blog/header.html" %}
+    <main>
+      {% block main %}{% endblock %}
+    </main>
   </body>
 </html>

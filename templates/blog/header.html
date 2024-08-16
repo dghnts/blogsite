@@ -1,99 +1,60 @@
 {% load param_change %}
 {% load static %}
-<a href="{% url 'blog:index' %}"
-class="d-flex align-items-center col-md-auto mx-3 text-dark text-decoration-none">
-<h3>ブログサイト</h3>
-</a>
-<form class="d-flex align-items-center"
-   role="search"
-   id="Search_Form"
-   action="{% url 'blog:index' %}"
-   method="GET">
-<div class="input-group">
- {# タイトル検索 #}
- <input type="search"
-        class="form-control border-dark"
-        placeholder="タイトル検索"
-        aria-label="Search"
-        name="title_search"
-        value="{% if "title_search" in request.GET %}{% set_keywords request %}{% endif %}">
- {# カテゴリ検索 #}
- <select class="form-select border-dark"
-         id="Article_Category_Search"
-         name="article_category">
-   <option value="">記事カテゴリ</option>
-   {# 各カテゴリの値を表示 #}
-   {% for article_category in Article_Categories %}
-     <option value="{{ article_category.id }}"
-             {% category_selected request article_category.id %}>{{ article_category.name }}</option>
-   {% endfor %}
- </select>
- {# タグ検索 #}
- <button class="btn border-dark dropdown-toggle"
-         type="button"
-         data-bs-toggle="dropdown"
-         data-bs-auto-close="true"
-         aria-expanded="false">タグ</button>
- <ul class="dropdown-menu dropdown-menu-end">
-   {% for article_tag in Article_Tags %}
-     <li class="dropdown-item">
-       <input type="checkbox"
-              id="{{ article_tag.id }}"
-              name="article_tag"
-              value="{{ article_tag.id }}"
-              {% tag_checked request article_tag.id %}>
-       <label for="{{ article_tag.id }}">{{ article_tag.name }}</label>
-     </li>
-   {% endfor %}
- </ul>
- {# 検索実行ボタン #}
- <button type="submit" class="btn btn-outline-dark input-group-text">
-   <i class="fa-solid fa-magnifying-glass"></i>
- </button>
-</div>
-</form>
-<div class="col-md-3 d-flex align-items-center justify-content-end">
-{% if not request.user.is_authenticated %}
- <a class="btn btn-outline-success me-2" href="{% url "login" %}">ログイン</a>
-{% else %}
- <a class="notify_area mx-2" href="{% url 'blog:notify' %}">
-   <i class="fa-regular fa-bell fa-xl"></i>
-   {% if Notify_Counts > 0 %}<span class="notify_amount">{{ Notify_Counts }}</span>{% endif %}
- </a>
- <div class="dropdown mx-2">
-   <a class="dropidown-toggle"
-      data-bs-toggle="dropdown"
-      type="button"
-      data-bs-auto-close="false"
-      aria-expanded="true">
-      <img 
-      src={% if request.user.icon %}
-      "/media/{{request.user.icon}}"
+<header class="p-3 mb-3 border-bottom">
+  <div class="header_container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a href="{% url 'blog:index' %}"
+      class="col-md-3 d-flex justify-content-center">
+      <h3 class="mb-lg-0">ブログサイト</h3>
+      </a>
+      {# 検索ウインドウをinclude #}
+      <div class="col-12 col-lg-auto mx-lg-auto justify-content-center mb-md-0">
+        {% include "blog/search.html" %}
+      </div>
+      <div class="col-md-3 d-flex mt-2 mt-lg-0 align-items-center justify-content-center">
+      {% if not request.user.is_authenticated %}
+        <a class="btn btn-outline-success me-2" href="{% url "login" %}">ログイン</a>
       {% else %}
-      {% static "/images/default_user_icon.svg" %}
-      {% endif %} alt="ユーザー画像" width="42" height="42" class="rounded-circle">
-   </a>
-   <ul class="dropdown-menu dropdown-menu-end my-3">
-     <li>
-       <a class="dropdown-item" href="{% url 'blog:mypage' %}">マイページ</a>
-     </li>
-     <li>
-       <a class="dropdown-item" href="{% url 'password_change' %}">パスワードの変更</a>
-     </li>
-     <li>
-       <a class="dropdown-item" href="{% url "blog:settings" %}">設定</a>
-     </li>
-     <li>
-       <hr class="dropdown-divider">
-     </li>
-     <li>
-       <form action="{% url "logout" %}" method="post">
-         {% csrf_token %}
-         <input class="dropdown-item" type="submit" value="ログアウト">
-       </form>
-     </li>
-   </ul>
- </div>
- <a class="btn btn-success" href="{% url 'blog:create_article' %}">新規作成</a>
-{% endif %}
-</div>
+        <a class="notify_area mx-2" href="{% url 'blog:notify' %}">
+          <i class="fa-regular fa-bell fa-xl"></i>
+          {% if Notify_Counts > 0 %}<span class="notify_amount">{{ Notify_Counts }}</span>{% endif %}
+        </a>
+        <div class="dropdown me-2 d-inline">
+          <a class="dropidown-toggle"
+            data-bs-toggle="dropdown"
+            type="button"
+            data-bs-auto-close="false"
+            aria-expanded="true">
+            <img 
+            src={% if request.user.icon %}
+            "/media/{{request.user.icon}}"
+            {% else %}
+            {% static "/images/default_user_icon.svg" %}
+            {% endif %} alt="ユーザー画像" width="42" height="42" class="rounded-circle">
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end my-3">
+            <li>
+              <a class="dropdown-item" href="{% url 'blog:mypage' %}">マイページ</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'password_change' %}">パスワードの変更</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url "blog:settings" %}">設定</a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <form action="{% url "logout" %}" method="post">
+                {% csrf_token %}
+                <input class="dropdown-item" type="submit" value="ログアウト">
+              </form>
+            </li>
+          </ul>
+        </div>
+        <a class="btn btn-success" href="{% url 'blog:create_article' %}">新規作成</a>
+      {% endif %}
+    </div>
+  </div>
+</header>

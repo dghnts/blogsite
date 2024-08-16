@@ -1,0 +1,50 @@
+{% load param_change %}
+{% load static %}
+<form role="search"
+    class="row row-cols-lg-auto"
+    id="Search_Form"
+    action="{% url 'blog:index' %}"
+    method="GET">
+  <div class="input-group">
+    {# タイトル検索 #}
+    <input type="search"
+      class="form-control border-dark"
+      placeholder="タイトル検索"
+      aria-label="Search"
+      name="title_search"
+      value="{% if "title_search" in request.GET %}{% set_keywords request %}{% endif %}">
+    {# カテゴリ検索 #}
+    <select class="form-select border-dark"
+      id="Article_Category_Search"
+      name="article_category">
+      <option value="">記事カテゴリ</option>
+      {# 各カテゴリの値を表示 #}
+      {% for article_category in Article_Categories %}
+      <option value="{{ article_category.id }}"
+        {% category_selected request article_category.id %}>{{ article_category.name }}</option>
+      {% endfor %}
+    </select>
+    {# タグ検索 #}
+    <button class="btn border-dark dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+          data-bs-auto-close="true"
+          aria-expanded="false">タグ</button>
+    <ul class="dropdown-menu dropdown-menu-end">
+      {% for article_tag in Article_Tags %}
+        <li class="dropdown-item">
+          <input type="checkbox"
+                id="{{ article_tag.id }}"
+                name="article_tag"
+                value="{{ article_tag.id }}"
+                {% tag_checked request article_tag.id %}>
+          <label for="{{ article_tag.id }}">{{ article_tag.name }}</label>
+        </li>
+      {% endfor %}
+    </ul>
+    {# 検索実行ボタン #}
+    <button type="submit" class="btn btn-outline-dark input-group-text">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+  </div>
+</form>
