@@ -57,8 +57,8 @@ class="d-flex align-items-center col-md-auto mx-3 text-dark text-decoration-none
  <a class="btn btn-outline-success me-2" href="{% url "login" %}">ログイン</a>
 {% else %}
  <a class="notify_area mx-2" href="{% url 'blog:notify' %}">
-   <i class="fa-regular fa-bell fa-xs"></i>
-   {% if Notify_Counts == 1 %}<span class="notify_amount">{{ Notify_Counts }}</span>{% endif %}
+   <i class="fa-regular fa-bell fa-xl"></i>
+   {% if Notify_Counts > 0 %}<span class="notify_amount">{{ Notify_Counts }}</span>{% endif %}
  </a>
  <div class="dropdown mx-2">
    <a class="dropidown-toggle"
