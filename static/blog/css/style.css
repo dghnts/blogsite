@@ -12,6 +12,8 @@ main {
     font-size: 1.5rem;
     color: orange;
     position: relative;
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
 }
 
 .notify_amount {
@@ -19,12 +21,14 @@ main {
     display: inline-block;
     position: absolute;
     top: 0;
-    right: 0;
+    left: 1;
     color: white;
     background: crimson;
     padding: 0.25rem 0.5rem;
     border-radius: 1rem;
     font-weight: bold;
+    line-height: 1;
+    transform: translate(-50%, -50%);
 }
 
 /* 記事 */
