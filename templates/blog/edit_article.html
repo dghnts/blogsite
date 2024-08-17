@@ -5,44 +5,46 @@
     <script src="{% static 'blog/js/submit.js' %}"></script>
 {% endblock %}
 {% block main %}
-    <form action="" method="post">
-        {% csrf_token %}
-        <input type="text"
-               name="title"
-               placeholder="タイトル"
-               value="{{ article.title }}">
-        {# 大カテゴリの検索 #}
-        <select name="category">
-            <option value="">大カテゴリを選んでください</option>
-            {% for category in categories %}
-                <option value="{{ category.id }}"
-                        {% if category.id == article.article_category.category.id %}selected{% endif %}>
-                    {{ category.name }}
-                </option>
+    <div class="container">
+        <form action="" method="post" class="w-100" id="artifle_form">
+            {% csrf_token %}
+            <input  class="form-control form-control-lg mt-2"
+                    type="text"
+                    name="title"
+                    placeholder="タイトル"
+                    value="{{ article.title }}">
+            {# 大カテゴリの検索 #}
+            <select class="form-select mt-2" name="category">
+                <option value="">大カテゴリを選んでください</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}"
+                            {% if category.id == article.article_category.category.id %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            {# TODO: ここで大カテゴリから検索して選べるようにする(Ajax?)#}
+            <select class="form-select mt-2" id="article_category" name="article_category">
+                <option value="">カテゴリを選択してください</option>
+                {# articleに指定されているarticle_categoryをレンダリングしておく。 #}
+                {# <option value="{{ article.article_category.id }}" selected>{{ article.article_category.name }} </option> #}
+                {% for article_category in article_categories %}
+                    <option value="{{ article_category.id }}"
+                            {% if article_category.id == article.article_category.id %}selected{% endif %}>
+                        {{ article_category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            {% for tag in tags %}
+                <label>
+                    <input type="checkbox"
+                           name="article_tag"
+                           value="{{ tag.id }}"
+                           {% if tag in article.article_tag.all %}checked{% endif %}>
+                    {{ tag.name }}
+                </label>
             {% endfor %}
-        </select>
-        {# TODO: ここで大カテゴリから検索して選べるようにする(Ajax?)#}
-        <select id="article_category" name="article_category">
-            <option value="">カテゴリを選択してください</option>
-            {# articleに指定されているarticle_categoryをレンダリングしておく。 #}
-            {# <option value="{{ article.article_category.id }}" selected>{{ article.article_category.name }} </option> #}
-            {% for article_category in article_categories %}
-                <option value="{{ article_category.id }}"
-                        {% if article_category.id == article.article_category.id %}selected{% endif %}>
-                    {{ article_category.name }}
-                </option>
-            {% endfor %}
-        </select>
-        {% for tag in tags %}
-            <label>
-                <input type="checkbox"
-                       name="article_tag"
-                       value="{{ tag.id }}"
-                       {% if tag in article.article_tag.all %}checked{% endif %}>
-                {{ tag.name }}
-            </label>
-        {% endfor %}
-        {{ form.content }}
-        <input type="submit" value="送信">
-    </form>
+            {{ form.content }}
+        </form>
+    </div>
 {% endblock %}
