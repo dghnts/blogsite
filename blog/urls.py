@@ -23,4 +23,5 @@ urlpatterns = [
     path("comment/<int:pk>/", views.comment, name="comment"),
     path("settings/", views.settings, name="settings"),
     path("uploadicon/", views.uploadusericon, name="uploadusericon"),
+    path("deletearticle/<int:pk>/", views.deletearitlce, name="deletearticle"),
 ]

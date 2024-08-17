@@ -552,3 +552,15 @@ class UploadUserImage(View):
 
 
 uploadusericon = UploadUserImage.as_view()
+
+
+class DeleteArticle(View):
+    def post(self, request, pk, *args, **kwargs):
+        article = Article.objects.filter(id=pk).first()
+
+        article.delete()
+
+        return redirect("blog:index")
+
+
+deletearitlce = DeleteArticle.as_view()
