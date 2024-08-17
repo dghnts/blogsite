@@ -20,7 +20,7 @@ from .models import (
     Report,
     NotifyCategory,
     Notify,
-    Comment,
+    ArticleChat,
 )
 from .forms import (
     ArticleForm,
@@ -32,7 +32,7 @@ from .forms import (
     ArticleTagSearchForm,
     ReportForm,
     NotifyForm,
-    CommentForm,
+    ArticleChatForm,
 )
 from users.forms import CustomUserIsNotNotifyForm, IconForm
 from django.contrib.auth import get_user_model
@@ -180,10 +180,10 @@ class ArticleView(View):
                 article=pk, user=request.user
             ).exists()
 
-        comments = Comment.objects.filter(article=pk)
+        comments = ArticleChat.objects.filter(article=pk).order_by("-id")
 
         context["comments"] = create_paginator(comments, request.GET.get("page", 1), 5)
-
+        # print(comments)
         return render(request, "blog/article.html", context)
 
     def post(self, request, pk, *args, **kwargs):
@@ -307,9 +307,11 @@ def create_notification(user, category_name, subject, content):
         "content": content,
         "user": user,
     }
+
     notify_form = NotifyForm(dic_notify)
     if notify_form.is_valid():
         notify_form.save()
+        print("通知の作成が完了しました")
     else:
         print(notify_form.errors)
 
@@ -477,15 +479,16 @@ class CommentView(View):
         copied["user"] = request.user
         copied["article"] = pk
 
-        comment_form = CommentForm(copied)
+        comment_form = ArticleChatForm(copied)
 
         if not comment_form.is_valid():
-            print(comment_form.errors)
+            errors = comment_form.errors.get_json_data()
+            for e in errors:
+                print(e)
         else:
             comment_form.save()
-
+            print("フォームの保存に成功しました")
             article = Article.objects.filter(id=pk).first()
-            # FollowViewでの通知作成
             create_notification(
                 article.user,
                 "コメント",

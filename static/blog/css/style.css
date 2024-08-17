@@ -45,6 +45,7 @@ main {
 /* 記事 */
 .article_area {
     display: flex;
+    justify-content: center;
 }
 
 .article_menu {
