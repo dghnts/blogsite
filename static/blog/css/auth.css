@@ -31,9 +31,17 @@ a {
     border-bottom: 0.1rem solid;
 }
 
-.signup_message {
+.entrance_message {
     margin-top: 0.25rem;
     font-size: 0.875em;
+}
+
+.social_login {
+    padding: 1rem;
+}
+
+.form-floating {
+    margin-bottom: 1rem;
 }
 
 /* ボタンのホバーエフェクト */
