@@ -7,13 +7,14 @@ body {
     color: var(--text-color);
 }
 
+.page_title {
+    font-size: calc(1.325rem + 0.9vw);
+}
+
 a {
     font-weight: 500;
 }
 
-.login_container {
-    flex-grow: 0;
-}
 /* カードのスタイル */
 .card {
     display: flex;
@@ -23,25 +24,6 @@ a {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s, box-shadow 0.3s;
     padding: 3rem;
-}
-
-.login_form {
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
-    border-bottom: 0.1rem solid;
-}
-
-.entrance_message {
-    margin-top: 0.25rem;
-    font-size: 0.875em;
-}
-
-.social_login {
-    padding: 1rem;
-}
-
-.form-floating {
-    margin-bottom: 1rem;
 }
 
 /* ボタンのホバーエフェクト */
@@ -70,4 +52,25 @@ a {
 .btn-google:hover {
     background-color: #c23321;
     color: #fff;
+}
+
+/* ログインフォーム用のレイアウト */
+.login_form {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 0.1rem solid;
+}
+
+.signup_message {
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+}
+
+.social_login {
+    padding: 1rem;
+}
+
+/*フォームの設定*/
+.form-floating {
+    margin-bottom: 1rem;
 }

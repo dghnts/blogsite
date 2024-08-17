@@ -1,15 +1,14 @@
 {% extends "registration/entrance.html" %}
 {% block contents %}
 <div class="card-body">
-<h2 class="fs-2">ログイン</h2>
-<p class="entrance_message">
+<h2 class="page_title">ログイン</h2>
+<p class="signup_message">
     アカウントをお持ちでなければ、<a href="{% url 'signup' %}">こちらからユーザー登録</a>してください。                                
 </p>
 {% if form.errors %}
 <div class="alert alert-danger mt-2" role="alert">
     ユーザー名またはパスワードが間違っています。
 </div>
-{{form.errors }}
 {% endif %}
 <form method="post" action="{% url 'login' %}" class="login_form">
     
