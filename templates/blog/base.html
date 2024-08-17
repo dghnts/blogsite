@@ -44,7 +44,12 @@
     {% block extra_head %}{% endblock %}
   </head>
   <body>
-    {% include "blog/header.html" %}
+    {# 記事作成・編集画面のページの時、ヘッダーを変更#}
+    {% if not form %}
+      {% include "blog/header.html" %}
+    {% else %}
+      {% include "blog/article_header.html" %}
+    {% endif %} 
     <main>
       {% block main %}{% endblock %}
     </main>

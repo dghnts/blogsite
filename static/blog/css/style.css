@@ -1,9 +1,20 @@
 body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     color: var(--text-color);
 }
 
+header {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
 main {
-    background-color: var(--secondary-color);
+    display: flex;
+    flex-grow: 1;
+    background-color: var(--background-color);
 }
 
 /* 通知 */
@@ -89,7 +100,7 @@ main {
 
 /*カードのスタイル*/
 .card {
-    background-color: var(--background-color);
+    background-color: #fff;
     border: none;
     border-radius: 0.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

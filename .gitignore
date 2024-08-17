@@ -5,3 +5,5 @@ venv
 *.sqlite3
 */migrations
 */fixture
+
+**/__pycache__/**
