@@ -2,17 +2,18 @@
 {% load param_change %}
 {% block extra_head %}{% endblock %}
 {% block main %}
-    <h2>通知のページ</h2>
-    {# TODO: 未読の場合若干背景色を変更する　#}
-    {% for notify in notifies %}
-        <div class="border {% if not notify.read_at %}not_read{% endif %}">
+<div class="container">
+    <h2>通知ページ</h2>
+    <div>
+        {% for notify in notifies %}
+        <div class="card mb-2 {% if not notify.read_at %}not_read{% endif %}">
             <div>{{ notify.dt }}</div>
             <div>件名：{{ notify.subject }}</div>
             <div>内容：{{ notify.content }}</div>
             {% read_check notify %}
         </div>
-    {% endfor %}
-    {% if notifies.paginator.num_pages != 1 %}
+        {% endfor %}
+        {% if notifies.paginator.num_pages != 1 %}
         <ul class="pagination justify-content-center">
             {% if notifies.has_previous %}
                 <li class="page-item">
@@ -52,4 +53,6 @@
             {% endif %}
         </ul>
     {% endif %}
+    </div>
+</div>
 {% endblock %}

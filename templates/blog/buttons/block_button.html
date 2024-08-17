@@ -1,4 +1,5 @@
-<form action="{% url 'blog:block' following_object.followers.id %}" method="post">
+{% load param_change %}
+<form action="{% url 'blog:block' block_id %}" method="post" class="w-100 mb-2">
     {% csrf_token %}
-    <input class="btn btn-danger" type="submit" value="ブロック">
+    <input class="btn btn-danger w-100" type="submit" value="{% block_checked request block_id %}">
 </form>

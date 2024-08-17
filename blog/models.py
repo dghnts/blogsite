@@ -155,7 +155,9 @@ class Block(models.Model):
 class Report(models.Model):
     dt = models.DateTimeField(verbose_name="通報した日時", default=timezone.now)
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, verbose_name="通報したユーザー", on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL,
+        verbose_name="通報したユーザー",
+        on_delete=models.CASCADE,
     )
     article = models.ForeignKey(
         Article, verbose_name="通報した記事", on_delete=models.CASCADE
@@ -190,7 +192,9 @@ class Notify(models.Model):
     )
     content = models.CharField(verbose_name="通知内容", max_length=100)
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, verbose_name="通知するユーザー", on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL,
+        verbose_name="通知するユーザー",
+        on_delete=models.CASCADE,
     )
     read_at = models.DateTimeField(verbose_name="既読日時", blank=True, null=True)
 
@@ -212,6 +216,7 @@ class Notify(models.Model):
                 msg.send(fail_silently=False)
 
 
+"""
 class Comment(models.Model):
     dt = models.DateTimeField(verbose_name="コメント日時", default=timezone.now)
     content = models.CharField(verbose_name="コメント内容", max_length=500)
@@ -219,3 +224,4 @@ class Comment(models.Model):
         settings.AUTH_USER_MODEL, verbose_name="投稿者", on_delete=models.CASCADE
     )
     article = models.ForeignKey(Article, verbose_name="記事", on_delete=models.CASCADE)
+"""

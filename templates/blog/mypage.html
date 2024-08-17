@@ -2,96 +2,63 @@
 {% load param_change %}
 {% block extra_head %}{% endblock %}
 {% block main %}
-    <div class="container mt-4">
+    <div class="container">
         <h2>{{ request.user.username }}のマイページ</h2>
         <h3>フォロー中</h3>
-        <table class="table mb-2">
-            <thead>
-                <tr>
-                    <th>名前</th>
-                    <th>フォロー状況</th>
-                    <th>ブロック</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for following_object in request.user.following_user.all %}
-                    <tr>
-                        <td>
-                            <a class="me-2"
-                               href="{% url 'blog:userpage'  following_object.followers.id %}">{{ following_object.followers.username }}</a>
-                        </td>
-                        <td>
-                           {% include "blog/buttons/follow_button.html" with follower_id=following_object.followers.id %} 
-                        </td>
-                        <td>
-                            {% include "blog/buttons/block_button.html" %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col text-center">名前</div>
+            <div class="col text-center">フォロー状況</div>
+            <div class="col text-center">ブロック</div>
+        </div>
+        {% for following_object in request.user.following_user.all %}    
+            <div class="row align-items-center">
+                <div class="col-4 text-center">
+                    <a class="me-2" href="{% url 'blog:userpage'  following_object.followers.id %}">{{ following_object.followers.username }}</a>            
+                </div>
+                <div class="col-4">
+                    {% include "blog/buttons/follow_button.html" with follower_id=following_object.followers.id %} 
+                </div>
+                <div class="col-4">
+                    {% include "blog/buttons/block_button.html" with block_id=following_object.followers.id %}
+                </div>                 
+            </div>
+        {% endfor %}
         <h3>フォロワー</h3>
-        <table class="table mb-2">
-            <thead>
-                <tr>
-                    <th>名前</th>
-                    <th>フォロー状況</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for followed_object in request.user.followed_user.all %}
-                    <tr>
-                        <td>
-                            <a class="me-2"
-                               href="{% url 'blog:userpage' followed_object.follows.id %}">{{ followed_object.follows.username }}</a>
-                        </td>
-                        <td>
-                            <form class="d-inline"
-                                  action="{% url 'blog:follow' followed_object.follows.id %}"
-                                  method="post">
-                                {% csrf_token %}
-                                <input type="submit"
-                                       value="{% follow_checked request followed_object.follows %}">
-                            </form>
-                        </td>
-                        <td>
-                            <form class="d-inlie"
-                                  action="{% url 'blog:block' followed_object.follows.id %}"
-                                  method="post">
-                                {% csrf_token %}
-                                <input type="submit" value="ブロック">
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col text-center">名前</div>
+            <div class="col text-center">フォロー状況</div>
+            <div class="col text-center">ブロック</div>
+        </div>
+        {% for followed_object in request.user.followed_user.all %}    
+            <div class="row align-items-center">
+                <div class="col-4 text-center">
+                    <a class="me-2" href="{% url 'blog:userpage'  followed_object.follows.id %}">{{ followed_object.follows.username }}</a>            
+                </div>
+                <div class="col-4">
+                    {% include "blog/buttons/follow_button.html" with follower_id=followed_object.follows.id %} 
+                </div>
+                <div class="col-4">
+                    {% include "blog/buttons/block_button.html" with block_id=followed_object.follows.id %}
+                </div>                 
+            </div>
+        {% endfor %}
         <h3>ブロック中</h3>
-        <table class="table mb-2">
-            <thead>
-                <tr>
-                    <th>名前</th>
-                    <th>ブロック</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for blocking_object in request.user.blocking_user.all %}
-                    <tr>
-                        <td>
-                            <a class="me-2"
-                               href="{% url 'blog:userpage' blocking_object.blockers.id %}">{{ blocking_object.blockers.username }}</a>
-                        </td>
-                        <td>
-                            <form class="d-inlie"
-                                  action="{% url 'blog:block' blocking_object.blockers.id %}"
-                                  method="post">
-                                {% csrf_token %}
-                                <input type="submit" value="ブロック解除">
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col text-center">名前</div>
+            <div class="col"></div>
+            <div class="col text-center">ブロック</div>
+        </div>
+        {% for blocking_object in request.user.blocking_user.all %}
+            <div class="row align-items-center">
+                <div class="col-4 text-center">
+                    <a class="me-2" href="{% url 'blog:userpage'  blocking_object.blockers.id %}">{{ blocking_object.blockers.username }}</a>            
+                </div>
+                <div class="col-4">
+                </div>                 
+                <div class="col-4">
+                    {% include "blog/buttons/block_button.html" with block_id=blocking_object.blockers.id %} 
+                </div>
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}
