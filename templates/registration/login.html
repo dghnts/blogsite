@@ -5,24 +5,27 @@
 <p class="entrance_message">
     アカウントをお持ちでなければ、<a href="{% url 'signup' %}">こちらからユーザー登録</a>してください。                                
 </p>
-{% comment "" %}
-    {% if form.errors %}<div class="alert alert-danger mt-2" role="alert">ユーザー名またはパスワードが間違っています。</div>{% endif %}
-{% endcomment %}
+{% if form.errors %}
+<div class="alert alert-danger mt-2" role="alert">
+    ユーザー名またはパスワードが間違っています。
+</div>
+{{form.errors }}
+{% endif %}
 <form method="post" action="{% url 'login' %}" class="login_form">
     
         {% csrf_token %}
         <div class="form-floating">
             <input class="form-control border-dark my-2"
                    type="text"
-                   name="email"
+                   name="username"
                    autofocus=""
                    autocapitalize="none"
                    autocomplete="email"
                    maxlength="254"
                    required
-                   id="id_email"
+                   id="id_username"
                    placeholder="mail address">
-            <label for="id_email" class="form-text">メールアドレス</label>
+            <label for="id_username" class="form-text">メールアドレス</label>
         </div>
         <div class="form-floating">
             <input class="form-control border-dark my-2"
