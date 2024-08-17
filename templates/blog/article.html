@@ -162,23 +162,20 @@
                 <a href="{% if request.user != article.user %}{% url 'blog:userpage' article.user.id %}{% else %}{% url 'blog:mypage' %}{% endif %}">{{ article.user }}</a>
             </div>
             {% if request.user != article.user and request.user.is_authenticated %}
-                <form action="{% url 'blog:follow' article.user.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" value="{% follow_checked request article.user.id %}" />
-                </form>
+                {% include "blog/buttons/follow_button.html" with follower_id=article.user.id%}
             {% endif %}
             {% if request.user == article.user %}
-                <div>
-                    <a href="{% url 'blog:edit_article' article.id %}">編集する</a>
-                </div>
-                <div>
-                    <button class="btn btn-danger" type="submit" form="deletearticle">
-                        削除
-                    </button>
-                    <form class="d-none" action="{% url "blog:deletearticle" article.id %}" method="POST" id="deletearticle">
-                        {% csrf_token %}
-                    </form>
-                </div>
+            <div class="mb-2">
+                <a class="btn btn-success" href="{% url 'blog:edit_article' article.id %}">編集</a>
+            </div>
+            <div>
+                <button class="btn btn-danger" type="submit" form="deletearticle">
+                    削除
+                </button>
+                <form class="d-none" action="{% url "blog:deletearticle" article.id %}" method="POST" id="deletearticle">
+                    {% csrf_token %}
+                </form>
+            </div>
             {% endif %}
         </div>
     </div>
