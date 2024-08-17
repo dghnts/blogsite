@@ -1,0 +1,17 @@
+{% extends "registration/base.html" %}
+{% block main %}
+    <div class="d-flex flex-grow-1 justify-content-center align-items-center">
+        <div class="container login_container">
+            <div class="row justify-content-center">
+                <div class="col col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            {% block contents %}
+                            {% endblock %}
+                        </div>          
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
