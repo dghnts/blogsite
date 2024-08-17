@@ -1,47 +1,63 @@
 {% extends "registration/base.html" %}
 {% block main %}
-    <div class="container-fluid d-flex justify-content-center align-items-center">
-        <div class="card shadow p-4 mb-5 bg-white rounded"
-             style="max-width: 500px;
-                    width:100%">
-            <h2>ログイン</h2>
-            アカウントを持っていない方→<a href="{% url 'signup' %}">アカウント新規作成</a>
-            {% if form.errors %}<div class="alert alert-danger mt-2" role="alert">ユーザー名またはパスワードが間違っています。</div>{% endif %}
-            <form class="col-12" method="post" action="{% url 'login' %}">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="id_username" class="form-label">メールアドレス</label>
-                    <input class="form-control border-dark my-2"
-                           type="text"
-                           name="username"
-                           autofocus=""
-                           autocapitalize="none"
-                           autocomplete="username"
-                           maxlength="254"
-                           required
-                           id="id_username"
-                           placeholder="mail address">
+    <div class="d-flex flex-grow-1 justify-content-center align-items-center">
+        <div class="container login_container">
+            <div class="row justify-content-center">
+                <div class="col col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h1 class="fs-2">ログイン</h1>
+                            <p class="signup_message">
+                                アカウントをお持ちでなければ、<a href="{% url 'signup' %}">こちらからユーザー登録</a>してください。                                
+                            </p>
+                            {% comment "" %}
+                                {% if form.errors %}<div class="alert alert-danger mt-2" role="alert">ユーザー名またはパスワードが間違っています。</div>{% endif %}
+                            {% endcomment %}
+                            <form method="post" action="{% url 'login' %}" class="login_form">
+                                <div class="form_body">
+                                    {% csrf_token %}
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control border-dark my-2"
+                                               type="text"
+                                               name="email"
+                                               autofocus=""
+                                               autocapitalize="none"
+                                               autocomplete="email"
+                                               maxlength="254"
+                                               required
+                                               id="email"
+                                               placeholder="mail address">
+                                        <label for="email" class="form-text">メールアドレス</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control border-dark my-2"
+                                               type="password"
+                                               name="password"
+                                               autocomplete="current-password"
+                                               required
+                                               id="id_password"
+                                               placeholder="password">
+                                        <label for="id_password" class="form-text">パスワード</label>
+
+                                    </div>
+                                    <div class="form-text">
+                                        <a href="{% url 'password_reset' %}">パスワードをお忘れですか？</a>
+                                    </div>
+                                </div>
+                                <div class="form_footer">
+                                    <button class="btn btn-primary w-100 mt-3" type="submit">ログイン</button>
+                                </div>
+                            </form>
+                            <div>
+                                <a href="{% url 'social:begin' 'google-oauth2' %}"
+                                   id="google_login"
+                                   class="btn btn-google w-100 mt-2">
+                                    <i class="fab fa-google fa-fw"></i>
+                                Googleでログイン</a>
+                            </div>
+                        </div>          
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="id_password" class="form-label">パスワード</label>
-                    <input class="form-control border-dark my-2"
-                           type="password"
-                           name="password"
-                           autocomplete="current-password"
-                           required
-                           id="id_password"
-                           placeholder="password">
-                </div>
-                <a href="{% url 'password_reset' %}" class="d-block my-2">パスワードを忘れた場合</a>
-                <button class="btn btn-primary w-100 mt-3" type="submit">ログイン</button>
-            </form>
-            <hr class="my-4">
-            <div class="d-flex justify-content-center">
-                <a href="{% url 'social:begin' 'google-oauth2' %}"
-                   id="google_login"
-                   class="btn btn-google w-100 mt-2">
-                    <i class="fab fa-google fa-fw"></i>
-                Googleでログイン</a>
             </div>
         </div>
     </div>

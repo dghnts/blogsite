@@ -503,7 +503,7 @@ class SettingsView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         context = {}
         context["notify_categories"] = NotifyCategory.objects.all()
-        print(request.user.icon.path)
+        # print(request.user.icon.path)
         return render(request, "blog/settings.html", context)
 
     def post(self, request, *args, **kwargs):
