@@ -21,21 +21,10 @@
                                href="{% url 'blog:userpage'  following_object.followers.id %}">{{ following_object.followers.username }}</a>
                         </td>
                         <td>
-                            <form class="d-inline"
-                                  action="{% url 'blog:follow' following_object.followers.id %}"
-                                  method="post">
-                                {% csrf_token %}
-                                <input type="submit"
-                                       value="{% follow_checked request following_object.followers %}">
-                            </form>
+                           {% include "blog/buttons/follow_button.html" with follower_id=following_object.followers.id %} 
                         </td>
                         <td>
-                            <form class="d-inlie"
-                                  action="{% url 'blog:block' following_object.followers.id %}"
-                                  method="post">
-                                {% csrf_token %}
-                                <input type="submit" value="ブロック">
-                            </form>
+                            {% include "blog/buttons/block_button.html" %}
                         </td>
                     </tr>
                 {% endfor %}

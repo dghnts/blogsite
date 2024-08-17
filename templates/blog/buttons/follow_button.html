@@ -1,0 +1,5 @@
+{% load param_change %}
+<form action="{% url 'blog:follow' follower_id %}" method="post">
+    {% csrf_token %}
+    <input  class="btn btn-warning" type="submit" value="{% follow_checked request follower_id %}">
+</form>
