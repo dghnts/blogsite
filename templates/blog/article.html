@@ -12,70 +12,72 @@
                     {% csrf_token %}
                     <input id="good_submit" type="submit" value="いいね" />
                 </form>
-                <div class="article_menu_list">
-                    <div class="good_area">
-                        {% if is_good %}
-                            <label class="good_label" for="good_submit">
-                                <i class="fa-solid fa-heart"></i>
-                            </label>
-                        {% else %}
-                            <label class="good_label" for="good_submit">
-                                <i class="fa-regular fa-heart"></i>
-                            </label>
-                        {% endif %}
-                        <div class="good_area_description">いいね( {{ article.goodarticle_set.all|length }} )</div>
-                    </div>
-                    <div class="report_area">
-                        {% if request.user.is_authenticated %}
-                            <label class="report_label" for="report_submit">
-                                <i class="fa-solid fa-flag"></i>
-                            </label>
-                            <div class="report_area_description">報告</div>
-                            <button type="button"
-                                    id="report_submit"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#staticBackdrop"
-                                    style="display:none"></button>
-                            <div class="modal"
-                                 id="staticBackdrop"
-                                 data-bs-backdrop="static"
-                                 tabindex="-1">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">通報</h5>
-                                            <!-- modal終了のボタン -->
-                                            <button type="button"
-                                                    class="btn-close"
-                                                    data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            通報：
-                                            <form action="{% url 'blog:article' article.id %}"
-                                                  method="post"
-                                                  id="report_form">
-                                                {% csrf_token %}
-                                                <select name="reason">
-                                                    <option value="">通報理由を選択してください</option>
-                                                    {% for reason in reasons %}<option value="{{ reason }}">{{ reason }}</option>{% endfor %}
-                                                    <textarea class="form-control" name="comment"></textarea>
-                                                </select>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-warning" form="report_form">通報</button>
+                {% if request.user != article.user %}
+                    <div class="article_menu_list">
+                        <div class="good_area">
+                            {% if is_good %}
+                                <label class="good_label" for="good_submit">
+                                    <i class="fa-solid fa-heart"></i>
+                                </label>
+                            {% else %}
+                                <label class="good_label" for="good_submit">
+                                    <i class="fa-regular fa-heart"></i>
+                                </label>
+                            {% endif %}
+                            <div class="good_area_description">いいね( {{ article.goodarticle_set.all|length }} )</div>
+                        </div>
+                        <div class="report_area">
+                            {% if request.user.is_authenticated %}
+                                <label class="report_label" for="report_submit">
+                                    <i class="fa-solid fa-flag"></i>
+                                </label>
+                                <div class="report_area_description">報告</div>
+                                <button type="button"
+                                        id="report_submit"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#staticBackdrop"
+                                        style="display:none"></button>
+                                <div class="modal"
+                                     id="staticBackdrop"
+                                     data-bs-backdrop="static"
+                                     tabindex="-1">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">通報</h5>
+                                                <!-- modal終了のボタン -->
+                                                <button type="button"
+                                                        class="btn-close"
+                                                        data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                通報：
+                                                <form action="{% url 'blog:article' article.id %}"
+                                                      method="post"
+                                                      id="report_form">
+                                                    {% csrf_token %}
+                                                    <select name="reason">
+                                                        <option value="">通報理由を選択してください</option>
+                                                        {% for reason in reasons %}<option value="{{ reason }}">{{ reason }}</option>{% endfor %}
+                                                        <textarea class="form-control" name="comment"></textarea>
+                                                    </select>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-warning" form="report_form">通報</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% else %}
-                            <a class="report_label fa-solid fa-flag text-decoration-none py-2"
-                               href="{% url "login" %}"></a>
-                            <div class="report_area_description">報告</div>
-                        {% endif %}
+                            {% else %}
+                                <a class="report_label fa-solid fa-flag text-decoration-none py-2"
+                                   href="{% url "login" %}"></a>
+                                <div class="report_area_description">報告</div>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
+                {% endif %}
             </div>
             <div class="article_content">
                 <div>
@@ -96,52 +98,54 @@
                 <div>投稿日時： {{ article.dt }}</div>
                 <div>{{ article.content|safe }}</div>
                 <div class="comment_area m-4 p-2">
+                    {% if commments %}
                     <h3>コメント</h3>
                     {% for comment in comments %}
-                        <div class="border rounded m-4 p-2">
-                            <div>{{ comment.dt }}</div>
-                            <div>{{ comment.user }}</div>
-                            <div>{{ comment.content }}</div>
-                        </div>
-                    {% endfor %}
-                    <ul class="pagination justify-content-center">
-                        {% if comments.has_previous %}
+                            <div class="border rounded m-4 p-2">
+                                <div>{{ comment.dt }}</div>
+                                <div>{{ comment.user }}</div>
+                                <div>{{ comment.content }}</div>
+                            </div>
+                        {% endfor %}
+                        <ul class="pagination justify-content-center">
+                            {% if comments.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?{% url_replace request 'page' '1' %}">最初のページ</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="?{% url_replace request 'page' comments.previous_page_number %}">前のページ</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link">最初のページ</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link">前のページ</a>
+                                </li>
+                            {% endif %}
                             <li class="page-item">
-                                <a class="page-link" href="?{% url_replace request 'page' '1' %}">最初のページ</a>
+                                <a class="page-link">{{ comments.number }}</a>
                             </li>
-                            <li class="page-item">
-                                <a class="page-link"
-                                   href="?{% url_replace request 'page' comments.previous_page_number %}">前のページ</a>
-                            </li>
-                        {% else %}
-                            <li class="page-item">
-                                <a class="page-link">最初のページ</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link">前のページ</a>
-                            </li>
-                        {% endif %}
-                        <li class="page-item">
-                            <a class="page-link">{{ comments.number }}</a>
-                        </li>
-                        {% if comments.has_next %}
-                            <li class="page-item">
-                                <a class="page-link"
-                                   href="?{% url_replace request 'page' comments.next_page_number %}">次のページ</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link"
-                                   href="?{% url_replace request 'page' comments.paginator.num_pages %}">最後のページ</a>
-                            </li>
-                        {% else %}
-                            <li class="page-item">
-                                <a class="page-link">次のページ</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link">最後のページ</a>
-                            </li>
-                        {% endif %}
-                    </ul>
+                            {% if comments.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="?{% url_replace request 'page' comments.next_page_number %}">次のページ</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="?{% url_replace request 'page' comments.paginator.num_pages %}">最後のページ</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link">次のページ</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link">最後のページ</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
                     <h3>コメントする</h3>
                     <div class="submit_comment">
                         <form action="{% url 'blog:comment' article.id %}" method="post">
@@ -166,6 +170,14 @@
             {% if request.user == article.user %}
                 <div>
                     <a href="{% url 'blog:edit_article' article.id %}">編集する</a>
+                </div>
+                <div>
+                    <button class="btn btn-danger" type="submit" form="deletearticle">
+                        削除
+                    </button>
+                    <form class="d-none" action="{% url "blog:deletearticle" article.id %}" method="POST" id="deletearticle">
+                        {% csrf_token %}
+                    </form>
                 </div>
             {% endif %}
         </div>
