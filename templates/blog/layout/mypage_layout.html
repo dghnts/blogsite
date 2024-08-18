@@ -1,0 +1,34 @@
+{% extends "blog/layout/common_layout.html" %}
+{% load static %}
+{% load param_change %}
+{% block user_icon %}
+    <form action="{% url "blog:uploadusericon" %}" method="POST" accept="image/*" enctype="multipart/form-data" id="icon_form">
+        {% csrf_token %}
+        <input type="file" id="icon" name="icon" style="display:none;">
+        <label for="icon">
+            <img 
+            src={% if request.user.icon %}
+            "/media/{{request.user.icon}}"
+            {% else %}
+            {% static "/images/default_icon.svg" %}
+            {% endif %} alt="ユーザー画像" width="42" height="42" class="rounded-circle">
+        </label>
+    </form>
+{% endblock %}
+{% block user_name %}
+{{ request.user.username }}
+{% endblock %}
+{% block user_article_count %}
+{{ articles.count}}
+{% endblock %}
+{% block folowing_count %}
+{{ request.user.following_user.count }}
+{% endblock %}
+{% block followers_count %}
+{{ request.user.followed_user.count }}
+{% endblock %}
+{% block blockers_count %}
+{{ request.user.blocking_user.count }}
+{% endblock %}
+{% block main_contents%}
+{% endblock %}

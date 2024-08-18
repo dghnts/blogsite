@@ -274,7 +274,7 @@ class MyPageView(LoginRequiredMixin, View):
         context = {}
         context["notify_categories"] = NotifyCategory.objects.all()
         context["articles"] = Article.objects.filter(user=request.user)
-
+        context["person"] = request.user
         # print(context["articles"])
 
         return render(request, "blog/mypage.html", context)
@@ -321,6 +321,27 @@ def create_notification(user, category_name, subject, content):
 
 
 class FollowView(LoginRequiredMixin, View):
+    def get(self, request, pk, *args, **kwargs):
+        person = User.objects.filter(id=pk).first()
+        context = {}
+        context["follows"] = person.following_user.all()
+        context["articles"] = Article.objects.filter(user=person)
+        context["person"] = person
+
+        # ログインしているユーザーが該当ユーザーをブロックしているか判定するフラグ
+        if (
+            Block.objects.filter(blocks=request.user, blockers=pk).first()
+            in request.user.blocking_user.all()
+        ):
+            context["is_block"] = True
+        else:
+            context["is_block"] = False
+
+        if request.user == person:
+            return render(request, "blog/follows.html", context)
+        else:
+            return render(request, "blog/userpage/follows.html", context)
+
     def post(self, request, pk, *args, **kwargs):
         follow = Follow.objects.filter(follows=request.user, followers=pk)
 
@@ -353,8 +374,56 @@ class FollowView(LoginRequiredMixin, View):
 follow = FollowView.as_view()
 
 
+class FollowedView(LoginRequiredMixin, View):
+    def get(self, request, pk, *args, **kwargs):
+        person = User.objects.filter(id=pk).first()
+        context = {}
+        context["followed"] = person.followed_user.all()
+        context["articles"] = Article.objects.filter(user=person)
+        context["person"] = person
+
+        # ログインしているユーザーが該当ユーザーをブロックしているか判定するフラグ
+        if (
+            Block.objects.filter(blocks=request.user, blockers=pk).first()
+            in request.user.blocking_user.all()
+        ):
+            context["is_block"] = True
+        else:
+            context["is_block"] = False
+
+        # print(context["followed"].first().id)
+        if person == request.user:
+            return render(request, "blog/followed.html", context)
+        else:
+            return render(request, "blog/userpage/followed.html", context)
+
+
+followed = FollowedView.as_view()
+
+
 # BlockVView(ブロック・ブロック解除を行うビュー)
 class BlockView(LoginRequiredMixin, View):
+    def get(self, request, pk, *arggs, **kwargs):
+        person = User.objects.filter(id=pk).first()
+        context = {}
+        context["blocks"] = person.blocking_user.all
+        context["articles"] = Article.objects.filter(user=person)
+        context["person"] = person
+
+        # ログインしているユーザーが該当ユーザーをブロックしているか判定するフラグ
+        if (
+            Block.objects.filter(blocks=request.user, blockers=pk).first()
+            in request.user.blocking_user.all()
+        ):
+            context["is_block"] = True
+        else:
+            context["is_block"] = False
+
+        if person == request.user:
+            return render(request, "blog/block.html", context)
+        else:
+            return render(request, "blog/userpage/block.html", context)
+
     def post(self, request, pk, *args, **kwargs):
         block = Block.objects.filter(blocks=request.user, blockers=pk)
 
