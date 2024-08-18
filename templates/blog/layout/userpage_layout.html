@@ -15,7 +15,11 @@ src={% if person.icon %}
 {% endif %} alt="ユーザー画像" width="42" height="42" class="rounded-circle">
 {% endblock %}
 {% block user_name %}
-{{ person.username }}
+{% if request.user.get_full_name == "" %}
+    {{ person.username}}
+{% else %}
+    {{ person.get_full_name }}
+{% endif %}
 {% endblock %}
 {% block user_article_count %}
 {{ articles.count}}

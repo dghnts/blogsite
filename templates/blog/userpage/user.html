@@ -24,7 +24,7 @@
         <div class="card mb-4 shadow-sm">
             <div class="card-body">
                 {# メールアドレスが見えてしまうので、usernameを表示。カスタムユーザーモデルからハンドルネームを記録するフィールドを用意する？#}
-                <div>執筆者： {{ article.user.username }}</div>
+                <div>執筆者： {% if article.user.getfull_name %}{{ article.user.get_full_name }}{% else %}{{ article.user.username }}{% endif %} </div>
                 <div>投稿日時： {{ article.dt }}</div>
                 <a href="{% url 'blog:article' article.id %}">
                     <h2 class="text-white bg-primary px-2 py-1">{{ article.title }}</h2>
@@ -58,60 +58,4 @@
     {% empty %}
         <div>投稿されている記事はありません</div>
     {% endfor %}
-{% endif %}
-{% comment %}
-    <div class="container">
-        <div>
-            <h2>{{ person.username }}のページ</h2>
-            {# TODO: ここにユーザーのプロフィールを表示 #}
-        </div>
-        <div class="row">
-
-            </div>
-            <div class="col-md-2 d-flex flex-column align-items-center">
-                {% if not is_block %}
-                <form action="{% url 'blog:follow' person.id %}" method="post" class="form-control mb-2 p-0">
-                    {% csrf_token %}
-                    <input class="btn btn-warning w-100" type="submit" value="{% follow_checked request person.id %}">
-                </form>
-            {% endif %}
-            <form action="{% url 'blog:block' person.id %}" method="post" class="form-control mb-2 p-0">
-                {% csrf_token %}
-                <input class="btn btn-danger w-100" type="submit" value="{% block_checked request person.id %}">
-            </form>
-            <h3>フォロー中</h3>
-            {% if person.followed_user.first.values == None  %}
-                <p>フォローしているユーザーはいません</p>
-            {% else %}
-                {% for following_object in person.following_user.all %}
-                <a class="me-2"href={% if request.user != following_object.followers %}
-                   "{% url 'blog:userpage' following_object.followers.id %}"
-                   {% else %}
-                   "{% url 'blog:mypage' %}"
-                   {% endif %}>{{ following_object.followers.username }}</a>
-                {% endfor %}
-            {% endif %}
-            
-            <h3>フォロワー</h3>
-            {% if person.followed_user.first.values == None %}
-                フォロワーはいません
-            {% else %}
-                {% for followed_object in person.followed_user.all %}
-                <a class="me-2"
-                   href="{% if request.user != followed_object.follows %}"
-                   "
-                   {% url 'blog:userpage' followed_object.follows.id %}
-                   "
-                   {% else %}
-                   "
-                   {% url 'blog:mypage' %}
-                   "
-                   {% endif %}>{{ followed_object.follows.username }}</a>
-                {% endfor %}
-            {% endif %}
-
-            </div>        
-        </div>
-    </div>
-{% endcomment %}
-{% endblock %}
+{% endif %}{% endblock %}

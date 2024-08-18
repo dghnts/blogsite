@@ -92,7 +92,7 @@ main {
 }
 
 .not_read {
-    background: orange;
+    background: orange !important;
 }
 
 .dropdown-toggle::after {
@@ -205,10 +205,4 @@ main {
 
 .pagination .page-item.disabled .page-link {
     color: #6c757d;
-}
-
-/*スクロールで追従するように機能を実装*/
-.profile_list {
-    position: sticky;
-    top: 0;
 }

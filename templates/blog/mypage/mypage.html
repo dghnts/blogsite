@@ -24,7 +24,7 @@
                     {% endfor %}
                 </div>
                 {# メールアドレスが見えてしまうので、usernameを表示。カスタムユーザーモデルからハンドルネームを記録するフィールドを用意する？#}
-                <small class="text-muted">執筆者： {{ article.user.username }} / 投稿日時： {{ article.dt }}</small>
+                <small class="text-muted">執筆者： {% if article.user.getfull_name %}{{ article.user.get_full_name }}{% else %}{{ article.user.username }}{% endif %} / 投稿日時： {{ article.dt }}</small>
             </div>
             <a class="btn btn-primary mt-3" href="{% url 'blog:article' article.id %}">続きを読む</a>
         </div>
