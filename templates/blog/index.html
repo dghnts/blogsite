@@ -27,7 +27,7 @@
                                                    class="badge bg-secondary">{{ tag.name }}</a>
                                             {% endfor %}
                                         </div>
-                                        <small class="text-muted">執筆者： {{ article.user.username }} / 投稿日時： {{ article.dt }}</small>
+                                        <small class="text-muted">執筆者： {% if article.user.get_full_name != "" %}{{ article.user.get_full_name }}{% else %}{{ article.user.username }}{% endif %} / 投稿日時： {{ article.dt }}</small>
                                     </div>
                                     <a href="{% url 'blog:article' article.id %}"class="btn btn-primary mt-3">続きを読む</a>
                                 </div>

@@ -94,7 +94,7 @@
                 </div>
                 <h2 class="text-white bg-primary px-2 py-1">{{ article.title }}</h2>
                 {# TODO:ハンドルネームを指定するか#}
-                <div>執筆者： {{ article.user.username }}</div>
+                <div>執筆者： {% if article.user.get_full_name != "" %}{{ article.user.get_full_name }}{% else %}{% endif %}{{ article.user.username }}</div>
                 <div>投稿日時： {{ article.dt }}</div>
                 <div>{{ article.content|safe }}</div>
                 <div class="comment_area m-4 p-2">

@@ -16,7 +16,7 @@
     </form>
 {% endblock %}
 {% block user_name %}
-{{ request.user.username }}
+{% get_username request.user %}
 {% endblock %}
 {% block user_article_count %}
 {{ articles.count}}

@@ -34,7 +34,7 @@ from .forms import (
     NotifyForm,
     ArticleChatForm,
 )
-from users.forms import CustomUserIsNotNotifyForm, IconForm
+from users.forms import CustomUserIsNotNotifyForm, IconForm, CustomUserNameForm
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -277,7 +277,7 @@ class MyPageView(LoginRequiredMixin, View):
         context["person"] = request.user
         # print(context["articles"])
 
-        return render(request, "blog/mypage.html", context)
+        return render(request, "blog/mypage/mypage.html", context)
 
 
 mypage = MyPageView.as_view()
@@ -298,7 +298,7 @@ class UserView(LoginRequiredMixin, View):
         else:
             context["is_block"] = False
 
-        return render(request, "blog/user.html", context)
+        return render(request, "blog/userpage/user.html", context)
 
 
 userpage = UserView.as_view()
@@ -338,7 +338,7 @@ class FollowView(LoginRequiredMixin, View):
             context["is_block"] = False
 
         if request.user == person:
-            return render(request, "blog/follows.html", context)
+            return render(request, "blog/mypage/follows.html", context)
         else:
             return render(request, "blog/userpage/follows.html", context)
 
@@ -365,7 +365,7 @@ class FollowView(LoginRequiredMixin, View):
                 pk,
                 "フォロー",
                 "フォローされました",
-                f"{request.user.username}にフォローされました。",
+                f"{request.user.get_full_name()}にフォローされました。",
             )
 
         return redirect("blog:userpage", pk=pk)
@@ -393,7 +393,7 @@ class FollowedView(LoginRequiredMixin, View):
 
         # print(context["followed"].first().id)
         if person == request.user:
-            return render(request, "blog/followed.html", context)
+            return render(request, "blog/mypage/followed.html", context)
         else:
             return render(request, "blog/userpage/followed.html", context)
 
@@ -420,7 +420,7 @@ class BlockView(LoginRequiredMixin, View):
             context["is_block"] = False
 
         if person == request.user:
-            return render(request, "blog/block.html", context)
+            return render(request, "blog/mypage/block.html", context)
         else:
             return render(request, "blog/userpage/block.html", context)
 
@@ -640,3 +640,20 @@ class DeleteArticle(View):
 
 
 deletearitlce = DeleteArticle.as_view()
+
+
+class ChangeNameView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        form = CustomUserNameForm(request.POST, instance=request.user)
+
+        if not form.is_valid():
+            print(form.errors)
+        else:
+            print(form.clean())
+            form.save()
+            messages.success(request, "ハンドルネームの変更が完了しました")
+
+        return redirect("blog:settings")
+
+
+changename = ChangeNameView.as_view()
