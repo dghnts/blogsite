@@ -1,0 +1,20 @@
+{% extends "blog/layout/userpage_layout.html" %}
+
+{% load param_change %}
+{% load static %}
+{% block main_contents %}
+<h2>フォローしているユーザー</h2>
+{% for following_object in follows %}    
+    <div class="d-flex align-items-center px-2 bg-light border-bottom">
+        <img 
+        src={% if following_object.followers.icon %}
+        "/media/{{following_object.followers.icon}}"
+        {% else %}
+        {% static "/images/default_icon.svg" %}
+        {% endif %} alt="ユーザー画像" width="42" height="42" class="rounded-circle me-2">
+        <a class="me-2 fs-4 flex-grow-1" href="{% url 'blog:userpage'  following_object.followers.id %}">{{ following_object.followers.username }}</a>
+    </div>
+{% empty %}
+    <p>フォローしているユーザーはいません</p>
+{% endfor %}
+{% endblock %}

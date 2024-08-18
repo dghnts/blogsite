@@ -6,23 +6,6 @@
 {% endblock %}
 {% block main %}
 <div class="container">
-    <div id="profile" class="border-bottom py-2">
-        <div class="user_name">
-            {{ request.user.username }}
-        </div>
-        <form action="{% url "blog:uploadusericon" %}" method="POST" accept="image/*" enctype="multipart/form-data" id="icon_form">
-            {% csrf_token %}
-            <input type="file" id="icon" name="icon" style="display:none;">
-            <label for="icon">
-                <img 
-                src={% if request.user.icon %}
-                "/media/{{request.user.icon}}"
-                {% else %}
-                {% static "/images/default_icon.svg" %}
-                {% endif %} alt="ユーザー画像" width="42" height="42" class="rounded-circle">
-            </label>
-        </form>
-    </div>
     <div class="border-bottom py-2">
         <h3 id="notify_setting" class="border-bottom">通知設定</h3>
         {% for notify_category in notify_categories %}
