@@ -4,7 +4,7 @@
 {% block main_contents %}
 <h2>フォロワー</h2>
 {% for followed_object in followed %}    
-<div class="d-flex align-items-center px-2 bg-light border-bottom">
+<div class="d-flex align-items-center p-2 bg-light border-bottom">
     <img 
     src={% if followed_object.follows.icon %}
     "/media/{{followed_object.follows.icon}}"

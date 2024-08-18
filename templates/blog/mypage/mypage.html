@@ -23,7 +23,6 @@
                            class="badge bg-secondary">{{ tag.name }}</a>
                     {% endfor %}
                 </div>
-                {# メールアドレスが見えてしまうので、usernameを表示。カスタムユーザーモデルからハンドルネームを記録するフィールドを用意する？#}
                 <small class="text-muted">執筆者： {% if article.user.getfull_name %}{{ article.user.get_full_name }}{% else %}{{ article.user.username }}{% endif %} / 投稿日時： {{ article.dt }}</small>
             </div>
             <a class="btn btn-primary mt-3" href="{% url 'blog:article' article.id %}">続きを読む</a>
@@ -32,4 +31,45 @@
 {% empty %}
     <div>投稿されている記事はありません</div>
 {% endfor %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if articles.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?{% url_replace request 'page' '1' %}">最初のページ</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link"
+                   href="?{% url_replace request 'page' articles.previous_page_number %}">前のページ</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">最初のページ</a>
+            </li>
+            <li class="page-item disabled">
+                <a class="page-link">前のページ</a>
+            </li>
+        {% endif %}
+        <li class="page-item">
+            <a class="page-link">{{ articles.number }}</a>
+        </li>
+        {% if articles.has_next %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="?{% url_replace request 'page' articles.next_page_number %}">次のページ</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link"
+                   href="?{% url_replace request 'page' articles.paginator.num_pages %}">最後のページ</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">次のページ</a>
+            </li>
+            <li class="page-item disabled">
+                <a class="page-link">最後のページ</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
 {% endblock %}

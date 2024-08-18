@@ -86,15 +86,6 @@ class IndexView(View):
         print(request.GET.get("page", 1))
         context["articles"] = create_paginator(articles, request.GET.get("page", 1), 5)
 
-        # トレンドタグの設定
-        dict_tags = [
-            {"article_tag": article_tag, "counts": article_tag.count_articles()}
-            for article_tag in ArticleTag.objects.all()
-        ]
-        dict_tags = sorted(dict_tags, reverse=True, key=lambda x: x["counts"])
-
-        context["trend_tags"] = [dict_tag["article_tag"] for dict_tag in dict_tags][:5]
-
         # ログインしている場合ブロックしているユーザーのリストを作成
         if request.user.is_authenticated:
             context["blocked_users"] = [
@@ -253,6 +244,7 @@ class ArticleCategoryOptionCreateView(LoginRequiredMixin, View):
         form = ArticleCategoryOptionForm(request.GET)
 
         if not form.is_valid():
+
             return JsonResponse(data)
 
         data["error"] = False
@@ -271,9 +263,10 @@ article_category_option_create = ArticleCategoryOptionCreateView.as_view()
 
 class MyPageView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
+        articles = Article.objects.filter(user=request.user)
         context = {}
         context["notify_categories"] = NotifyCategory.objects.all()
-        context["articles"] = Article.objects.filter(user=request.user)
+        context["articles"] = create_paginator(articles, request.GET.get("page", 1))
         context["person"] = request.user
         # print(context["articles"])
 
@@ -285,10 +278,10 @@ mypage = MyPageView.as_view()
 
 class UserView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
+        articles = Article.objects.filter(user=pk)
         context = {}
-
         context["person"] = User.objects.filter(id=pk).first()
-        context["articles"] = Article.objects.filter(user=pk)
+        context["articles"] = create_paginator(articles, request.GET.get("get", 1))
         # ログインしているユーザーが該当ユーザーをブロックしているか判定するフラグ
         if (
             Block.objects.filter(blocks=request.user, blockers=pk).first()
@@ -518,12 +511,7 @@ class TrendView(View):
 
         trends = sorted(trends, key=lambda x: x["count"], reverse=True)
 
-        paginator = Paginator(trends, 10)
-
-        if "page" in request.GET:
-            context["trends"] = paginator.get_page(request.GET["page"])
-        else:
-            context["trends"] = paginator.get_page(1)
+        context["trends"] = create_paginator(trends, request.GET.get("page", 1))
 
         return render(request, "blog/trend.html", context)
 

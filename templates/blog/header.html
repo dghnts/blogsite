@@ -58,3 +58,19 @@
     </div>
   </div>
 </header>
+<nav>
+  <ul class="nav justify-content-center">
+    <li class="nav-item">
+      <a class="nav-link" href="{% url "blog:index" %}">HOME</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url "blog:following" %}">TIMELINE</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url "blog:trend" %}">TREND</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url "blog:mypage" %}">MYPAGE</a>
+    </li>
+  </ul>
+</nav>

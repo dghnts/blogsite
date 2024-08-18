@@ -28,54 +28,50 @@
                             {% endif %}
                             <div class="good_area_description">いいね( {{ article.goodarticle_set.all|length }} )</div>
                         </div>
-                        <div class="report_area">
-                            {% if request.user.is_authenticated %}
-                                <label class="report_label" for="report_submit">
-                                    <i class="fa-solid fa-flag"></i>
-                                </label>
-                                <div class="report_area_description">報告</div>
-                                <button type="button"
-                                        id="report_submit"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#staticBackdrop"
-                                        style="display:none"></button>
-                                <div class="modal"
-                                     id="staticBackdrop"
-                                     data-bs-backdrop="static"
-                                     tabindex="-1">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">通報</h5>
-                                                <!-- modal終了のボタン -->
-                                                <button type="button"
-                                                        class="btn-close"
-                                                        data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="{% url 'blog:article' article.id %}"
-                                                      method="post"
-                                                      id="report_form">
-                                                    {% csrf_token %}
-                                                    <select name="reason">
-                                                        <option value="">通報理由を選択してください</option>
-                                                        {% for reason in reasons %}<option value="{{ reason }}">{{ reason }}</option>{% endfor %}
-                                                        <textarea class="form-control" name="comment"></textarea>
-                                                    </select>
-                                                </form>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btn-warning" form="report_form">通報</button>
-                                            </div>
-                                        </div>
+                    </div>
+                    <div class="report_area">
+                        <label class="report_label" for="report_submit">
+                            <i class="fa-solid fa-flag"></i>
+                        </label>
+                        <div class="report_area_description">報告</div>
+                            <button type="button"
+                                    id="report_submit"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#staticBackdrop"
+                                    style="display:none">
+                            </button>
+                        <div class="modal"
+                            id="staticBackdrop"
+                            data-bs-backdrop="static"
+                            tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">通報</h5>
+                                        <!-- modal終了のボタン -->
+                                        <button type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{% url 'blog:article' article.id %}"
+                                              method="post"
+                                              id="report_form">
+                                            {% csrf_token %}
+                                            <select class="form-select mb-2" name="reason">
+                                                <option value="">通報理由を選択してください</option>
+                                                {% for reason in reasons %}<option value="{{ reason }}">{{ reason }}</option>{% endfor %}
+                                            </select>
+                                            <textarea class="form-control" name="comment"></textarea>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-warning" form="report_form">通報</button>
                                     </div>
                                 </div>
-                            {% else %}
-                                <a class="report_label fa-solid fa-flag text-decoration-none py-2"
-                                   href="{% url "login" %}"></a>
-                                <div class="report_area_description">ログイン</div>
-                            {% endif %}
+                            </div>
                         </div>
                     </div>
                 {% endif %}
@@ -135,3 +131,4 @@
         </div>
     </div>
 {% endblock %}
+

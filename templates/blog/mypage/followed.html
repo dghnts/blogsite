@@ -11,9 +11,9 @@
     {% else %}
     {% static "/images/default_icon.svg" %}
     {% endif %} alt="ユーザー画像" width="42" height="42" class="rounded-circle me-2">
-    <a class="me-2 fs-4 flex-grow-1" href="{% url 'blog:userpage'  followed_object.following.id %}">{{ followed_object.following.username }}</a>
+    <a class="me-2 fs-4 flex-grow-1" href="{% url 'blog:userpage'  followed_object.follows.id %}">{{ followed_object.follows.username }}</a>
     <div class="d-flex pt-2 flex-grow-0">
-        {% include "blog/buttons/follow_button.html" with follower_id=followed_object.following.id%}
+        {% include "blog/buttons/follow_button.html" with follower_id=followed_object.follows.id%}
         {% include "blog/buttons/block_button.html" with block_id=followed_object.followers.id%}
     </div>
 </div>

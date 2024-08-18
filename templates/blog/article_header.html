@@ -8,7 +8,7 @@
       <h3>ブログサイト</h3>
       </a>
       <div class="d-flex justify-content-center">
-        <button class="btn btn-primary" type="submit" form="article_form">
+        <button class="btn btn-primary me-2" type="submit" form="article_form">
             記事投稿
         </button>
         <div class="dropdown me-2 d-inline">
@@ -21,7 +21,7 @@
             src={% if request.user.icon %}
             "/media/{{request.user.icon}}"
             {% else %}
-            {% static "/images/default_user_icon.svg" %}
+            {% static "/images/default_icon.svg" %}
             {% endif %} alt="ユーザー画像" width="42" height="42" class="rounded-circle">
           </a>
           <ul class="dropdown-menu dropdown-menu-end my-3">

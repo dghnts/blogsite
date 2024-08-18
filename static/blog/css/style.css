@@ -7,7 +7,6 @@ body {
 
 header {
     padding: 1rem;
-    margin-bottom: 1rem;
     border-bottom: 1px solid #dee2e6;
 }
 
@@ -164,37 +163,6 @@ main {
     background-color: #0056b3;
     border-color: #0056b3;
 }
-
-/*
-.sidebar {
-    padding: 1rem;
-    background-color: #fff;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: 1rem;
-}
-
-.sidebar h5 {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    color: #333;
-}
-
-.sidebar .list-group-item {
-    border: none;
-    padding: 0.5rem 1rem;
-}
-
-.sidebar .list-group-item a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-.sidebar .list-group-item a:hover {
-    text-decoration: underline;
-}
-*/
 
 .pagination .page-item .page-link {
     color: #007bff;

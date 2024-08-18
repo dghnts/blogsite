@@ -1,50 +1,91 @@
 {% extends "blog/base.html" %}
 {% load param_change %}
-
-{% block extra_head %}
-{% endblock %}
-
+{% block extra_head %}{% endblock %}
 {% block main %}
+    <div class="container py-4">
     <div class="row">
-        <div class="col-10">
+        <div class="col-md-10">
             {% for trend in trends %}
-                <a href="{% url 'blog:article' trend.article.id %}">
-                    <div>{{ trend.article.text_thumbnail|safe }} </div>
-                    <div>タイトル： {{ trend.article.title }}</div>
-                    <div>執筆者： {{ trend.article.user }}</div>
-                    <div>投稿日時： {{ trend.article.dt }}</div>
-                    <div>カテゴリ： {{ trend.article.article_category.name }}</div>
-                    <div>タグ: {% for tag in trend.article.article_tag.all %} {{ tag.name }} {% endfor %}</div>
-                    {# <div>{{ trend.article.content|safe }} </div> #}
-                    <div>{{ trend.article.plain_content|truncatechars:100 }} </div>
-                </a>
-                <hr>
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'blog:article' trend.article.id %}" class="text-dark">{{ trend.article.title }}</h5>
+                    </h5>
+                    <div class="card-image text-center mb-3">
+                        <a href="{% url 'blog:article' trend.article.id %}">{{ trend.article.text_thumbnail|safe }}</a>
+                    </div>
+                    <p class="card-text">{{ trend.article.plain_content|truncatechars:100 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            カテゴリ： <a href="?{% url_replace request 'article_category' trend.article.article_category.id %}"
+                            class="badge bg-secondary">{{ trend.article.article_category.name }}</a>
+                            タグ:
+                            {% for tag in trend.article.article_tag.all %}
+                                <a href="?{% url_replace request 'article_tag' tag.id %}"
+                                   class="badge bg-secondary">{{ tag.name }}</a>
+                            {% endfor %}
+                        </div>
+                        <small class="text-muted">執筆者： {% if trend.article.user.getfull_name %}{{ trend.article.user.get_full_name }}{% else %}{{ trend.article.user.username }}{% endif %} / 投稿日時： {{ trend.article.dt }}</small>
+                    </div>
+                    <a class="btn btn-primary mt-3" href="{% url 'blog:article' trend.article.id %}">続きを読む</a>    
+                </div>
+            </div>
+            {% empty %}
+                <div>投稿されている記事はありません</div>
             {% endfor %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if trends.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?{% url_replace request 'page' '1' %}">最初のページ</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?{% url_replace request 'page' articles.previous_page_number %}">前のページ</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link">最初のページ</a>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link">前のページ</a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item">
+                        <a class="page-link">{{ trends.number }}</a>
+                    </li>
+                    {% if trends.has_next %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?{% url_replace request 'page' articles.next_page_number %}">次のページ</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?{% url_replace request 'page' articles.paginator.num_pages %}">最後のページ</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link">次のページ</a>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link">最後のページ</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
         </div>
-        <div class="col-2">
-            <div class="text-center">人気のタグ</div>
-            <ul class="list-group">
-                {% for article_tag in trend_tags %}
-                    <li class="list-group-item"> {{ article_tag.name }} </li>
-                {% endfor %}
-            </ul>
+        <div class="col-md-2">
+            <div class="sidebar">
+                <h5>人気のタグ</h5>
+                <ul class="list-group">
+                    {% for article_tag in trend_tags %}
+                        <li class="list-group-item">
+                            <a href="?{% url_replace request 'article_tag' article_tag.id %}">{{ article_tag.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
-    <ul class="pagination justify-content-center">
-        {% if trends.has_previous %}
-            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' '1' %}">最初のページ</a></li>
-            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' trends.previous_page_number %}">前のページ</a></li>
-        {% else %}
-            <li class="page-item"><a class="page-link">最初のページ</a></li>
-            <li class="page-item"><a class="page-link">前のページ</a></li>
-        {% endif %}
-            <li class="page-item"><a class="page-link">{{ trends.number }}</a></li>
-        {% if trends.has_next %}
-            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' trends.next_page_number %}">次のページ</a></li>
-            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' trends.paginator.num_pages %}">最後のページ</a></li>
-        {% else %}
-            <li class="page-item"><a class="page-link">次のページ</a></li>
-            <li class="page-item"><a class="page-link">最後のページ</a></li>
-        {% endif %}
-    </ul> 
+</div>
 {% endblock %}
