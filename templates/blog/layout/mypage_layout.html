@@ -19,7 +19,7 @@
 {% get_username request.user %}
 {% endblock %}
 {% block user_article_count %}
-{{ articles.count}}
+{{ articles|length }}
 {% endblock %}
 {% block folowing_count %}
 {{ request.user.following_user.count }}

@@ -22,7 +22,7 @@ src={% if person.icon %}
 {% endif %}
 {% endblock %}
 {% block user_article_count %}
-{{ articles.count}}
+{{ articles|length }}
 {% endblock %}
 {% block folowing_count %}
 {{ person.following_user.count }}
