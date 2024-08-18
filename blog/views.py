@@ -273,6 +273,10 @@ class MyPageView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         context = {}
         context["notify_categories"] = NotifyCategory.objects.all()
+        context["articles"] = Article.objects.filter(user=request.user)
+
+        # print(context["articles"])
+
         return render(request, "blog/mypage.html", context)
 
 
@@ -545,7 +549,7 @@ class UploadUserImage(View):
             for e in errors:
                 messages.error(request, e)
         else:
-            if os.path.exists(old_image_path):
+            if old_image_path != None and os.path.exists(old_image_path):
                 os.remove(old_image_path)
                 print("ファイルを削除しました")
 
