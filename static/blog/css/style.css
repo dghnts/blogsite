@@ -57,7 +57,7 @@ main {
 }
 
 /*スクロールで追従するように機能を実装*/
-.article_menu_lsit {
+.article_menu_list {
     position: sticky;
     top: 0;
 }
@@ -165,6 +165,7 @@ main {
     border-color: #0056b3;
 }
 
+/*
 .sidebar {
     padding: 1rem;
     background-color: #fff;
@@ -193,6 +194,7 @@ main {
 .sidebar .list-group-item a:hover {
     text-decoration: underline;
 }
+*/
 
 .pagination .page-item .page-link {
     color: #007bff;

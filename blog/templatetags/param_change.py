@@ -83,3 +83,16 @@ def get_username(user):
         return user.get_full_name()
     else:
         return user.username
+
+
+# 自分が対象ユーザーをフォローしているかチェックする。
+@register.simple_tag()
+def good_checked(article, user):
+    from ..models import GoodArticle
+    from ..forms import GoodArticleForm
+
+    print("ボタンを押しました")
+    if GoodArticle.objects.filter(article=article, user=user).exists():
+        return True
+    else:
+        return False

@@ -183,7 +183,7 @@ class ArticleView(View):
         comments = ArticleChat.objects.filter(article=pk).order_by("-id")
 
         context["comments"] = create_paginator(comments, request.GET.get("page", 1), 5)
-        # print(comments)
+        print(comments)
         return render(request, "blog/article.html", context)
 
     def post(self, request, pk, *args, **kwargs):
@@ -464,6 +464,12 @@ class GoodArticleView(LoginRequiredMixin, View):
         dic["article"] = pk
 
         good_form = GoodArticleForm(dic)
+
+        # 　既に言い値をしている場合、いいねを取り消す
+        good = GoodArticle.objects.filter(article=pk).first()
+        if good:
+            good.delete()
+            return redirect("blog:article", pk)
 
         if not good_form.is_valid():
             print(good_form.errors)
