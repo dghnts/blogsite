@@ -5,7 +5,7 @@
     <div class="container py-4">
         {% if articles %}
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-10">
                     {% for article in articles %}
                         {% if not article.user in blocked_users %}
                             <div class="card mb-4 shadow-sm">
@@ -35,7 +35,7 @@
                         {% endif %}
                     {% endfor %}
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <div class="sidebar">
                         <h5>人気のタグ</h5>
                         <ul class="list-group">

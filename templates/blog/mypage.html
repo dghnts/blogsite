@@ -1,64 +1,90 @@
 {% extends "blog/base.html" %}
+{% load static %}
 {% load param_change %}
 {% block extra_head %}{% endblock %}
 {% block main %}
-    <div class="container">
-        <h2>{{ request.user.username }}のマイページ</h2>
-        <h3>フォロー中</h3>
-        <div class="row">
-            <div class="col text-center">名前</div>
-            <div class="col text-center">フォロー状況</div>
-            <div class="col text-center">ブロック</div>
+<div class="container">
+    <div>
+        <h2>{{ request.user.username }}のページ</h2>
+        {# TODO: ここにユーザーのプロフィールを表示 #}
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <h2>記事一覧</h2>
+                {% for article in articles %}
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href={% url 'blog:article' article.id %} class="text-dark">{{ article.title }}</h5>
+                            </h5>
+                            <div class="card-image text-center mb-3">
+                                <a href="{% url 'blog:article' article.id %}">{{ article.text_thumbnail|safe }}</a>
+                            </div>
+                            <p class="card-text">{{ article.plain_content|truncatechars:100 }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    カテゴリ： <a href="?{% url_replace request 'article_category' article.article_category.id %}"
+                                    class="badge bg-secondary">{{ article.article_category.name }}</a>
+                                    タグ:
+                                    {% for tag in article.article_tag.all %}
+                                        <a href="?{% url_replace request 'article_tag' tag.id %}"
+                                           class="badge bg-secondary">{{ tag.name }}</a>
+                                    {% endfor %}
+                                </div>
+                                {# メールアドレスが見えてしまうので、usernameを表示。カスタムユーザーモデルからハンドルネームを記録するフィールドを用意する？#}
+                                <small class="text-muted">執筆者： {{ article.user.username }} / 投稿日時： {{ article.dt }}</small>
+                            </div>
+                            <a class="btn btn-primary mt-3" href="{% url 'blog:article' article.id %}">続きを読む</a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div>投稿されている記事はありません</div>
+                {% endfor %}
         </div>
-        {% for following_object in request.user.following_user.all %}    
-            <div class="row align-items-center">
-                <div class="col-4 text-center">
-                    <a class="me-2" href="{% url 'blog:userpage'  following_object.followers.id %}">{{ following_object.followers.username }}</a>            
+        <div class="col-md-2 d-flex flex-column align-items-center">
+            <h3>フォロー中</h3>
+            {% for following_object in request.user.following_user.all %}    
+                <div class="mb-2">
+                    <img 
+                    src={% if following_object.followers.icon %}
+                    "/media/{{following_object.followers.icon}}"
+                    {% else %}
+                    {% static "/images/default_icon.svg" %}
+                    {% endif %} alt="ユーザー画像" width="21" height="21" class="rounded-circle">
+                    <a class="me-2" href="{% url 'blog:userpage'  following_object.followers.id %}">{{ following_object.followers.username }}</a>                
                 </div>
-                <div class="col-4">
-                    {% include "blog/buttons/follow_button.html" with follower_id=following_object.followers.id %} 
-                </div>
-                <div class="col-4">
-                    {% include "blog/buttons/block_button.html" with block_id=following_object.followers.id %}
-                </div>                 
-            </div>
-        {% endfor %}
-        <h3>フォロワー</h3>
-        <div class="row">
-            <div class="col text-center">名前</div>
-            <div class="col text-center">フォロー状況</div>
-            <div class="col text-center">ブロック</div>
-        </div>
-        {% for followed_object in request.user.followed_user.all %}    
-            <div class="row align-items-center">
-                <div class="col-4 text-center">
+            {% empty %}
+                <p>フォローしているユーザーはいません</p>
+            {% endfor %}
+            <h3>フォロワー</h3>
+            {% for followed_object in request.user.followed_user.all %}    
+                <div class="mb-2">
+                    <img 
+                    src={% if followed_object.follows.icon %}
+                    "/media/{{followed_object.follows.icon}}"
+                    {% else %}
+                    {% static "/images/default_icon.svg" %}
+                    {% endif %} alt="ユーザー画像" width="21" height="21" class="rounded-circle">
                     <a class="me-2" href="{% url 'blog:userpage'  followed_object.follows.id %}">{{ followed_object.follows.username }}</a>            
                 </div>
-                <div class="col-4">
-                    {% include "blog/buttons/follow_button.html" with follower_id=followed_object.follows.id %} 
-                </div>
-                <div class="col-4">
-                    {% include "blog/buttons/block_button.html" with block_id=followed_object.follows.id %}
-                </div>                 
+            {% empty %}
+                <p>あなたをフォローしているユーザーはいません</p>
+            {% endfor %}
+            <h3>ブロック中</h3>
+            {% for blocking_object in request.user.blocking_user.all %}
+            <div class="mb-2">
+                <img 
+                src={% if blocking_object.blockers.icon %}
+                "/media/{{blocking_object.blockers.icon}}"
+                {% else %}
+                {% static "/images/default_icon.svg" %}
+                {% endif %} alt="ユーザー画像" width="21" height="21" class="rounded-circle">
+                <a class="me-2" href="{% url 'blog:userpage'  blocking_object.blockers.id %}">{{ blocking_object.blockers.username }}</a>            
             </div>
-        {% endfor %}
-        <h3>ブロック中</h3>
-        <div class="row">
-            <div class="col text-center">名前</div>
-            <div class="col"></div>
-            <div class="col text-center">ブロック</div>
-        </div>
-        {% for blocking_object in request.user.blocking_user.all %}
-            <div class="row align-items-center">
-                <div class="col-4 text-center">
-                    <a class="me-2" href="{% url 'blog:userpage'  blocking_object.blockers.id %}">{{ blocking_object.blockers.username }}</a>            
-                </div>
-                <div class="col-4">
-                </div>                 
-                <div class="col-4">
-                    {% include "blog/buttons/block_button.html" with block_id=blocking_object.blockers.id %} 
-                </div>
-            </div>
-        {% endfor %}
+            {% empty %}
+                <p>ブロックしているユーザーはいません</p>
+            {% endfor %}
+        </div>        
     </div>
+</div>
 {% endblock %}

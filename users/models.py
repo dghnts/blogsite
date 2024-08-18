@@ -65,7 +65,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         NotifyCategory, verbose_name="通知しないカテゴリ", blank=True
     )
     icon = models.ImageField(
-        verbose_name="アイコン", upload_to=rename_user_icon_path, blank=True, null=True
+        verbose_name="アイコン",
+        upload_to=rename_user_icon_path,
+        blank=True,
+        null=True,
     )
 
     objects = UserManager()
