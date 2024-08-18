@@ -1,0 +1,57 @@
+{% load static %}
+{% load param_change %}
+<h3>コメント</h3>
+{% for comment in comments %}
+    <div class="border rounded m-2 p-2 bg-white">
+        <div>{{ comment.dt }}</div>
+        <div>{{ comment.user }}</div>
+        <div>{{ comment.chat }}</div>
+    </div>
+{% empty %}
+{% endfor %}
+<ul class="pagination justify-content-center">
+    {% if comments.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?{% url_replace request 'page' '1' %}">最初のページ</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link"
+               href="?{% url_replace request 'page' comments.previous_page_number %}">前のページ</a>
+        </li>
+    {% else %}
+        <li class="page-item disabled">
+            <a class="page-link">最初のページ</a>
+        </li>
+        <li class="page-item disabled">
+            <a class="page-link">前のページ</a>
+        </li>
+    {% endif %}
+    <li class="page-item">
+        <a class="page-link">{{ comments.number }}</a>
+    </li>
+    {% if comments.has_next %}
+        <li class="page-item">
+            <a class="page-link"
+               href="?{% url_replace request 'page' comments.next_page_number %}">次のページ</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link"
+               href="?{% url_replace request 'page' comments.paginator.num_pages %}">最後のページ</a>
+        </li>
+    {% else %}
+        <li class="page-item disabled">
+            <a class="page-link">次のページ</a>
+        </li>
+        <li class="page-item disabled">
+            <a class="page-link">最後のページ</a>
+        </li>
+    {% endif %}
+</ul>
+<h3>コメントする</h3>
+<div class="submit_comment">
+    <form action="{% url 'blog:comment' article.id %}" method="post">
+        {% csrf_token %}
+        <textarea class="form-control border border-dark" name="chat"></textarea>
+        <input class="btn btn-outline-primary m-2 p-2 " type="submit" value="送信">
+    </form>
+</div>
