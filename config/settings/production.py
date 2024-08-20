@@ -33,3 +33,12 @@ STATIC_ROOT = "/var/www/{}/static".format(BASE_DIR.name)
 
 # 下記はファイルのアップロード機能を有する場合のみ
 MEDIA_ROOT = "/var/www/{}/media".format(BASE_DIR.name)
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = (
+    "https://std-blog.com/oauth/complete/google-oauth2/"
+)
