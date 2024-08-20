@@ -18,10 +18,10 @@
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-5 mb-2 mb-md-0">
-                  <input type="text" name="first_name" class="form-control" placeholder="First name" aria-label="First name">
+                  <input type="text" name="first_name" class="form-control" placeholder="First name" aria-label="First name" value="{{ request.user.first_name }}">
                 </div>
                 <div class="col-md-5 mb-2 mb-md-0">
-                  <input type="text" name="last_name" class="form-control" placeholder="Last name" aria-label="Last name">
+                  <input type="text" name="last_name" class="form-control" placeholder="Last name" aria-label="Last name" value="{{ request.user.last_name }}">
                 </div>
                 <div class="col-md-2">
                     <input class="btn btn-success" type="submit" value="変更">

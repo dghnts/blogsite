@@ -50,6 +50,8 @@
     {% else %}
       {% include "blog/article_header.html" %}
     {% endif %} 
+    {% include "blog/message.html" %}
+
     <main>
       {% block main %}{% endblock %}
     </main>

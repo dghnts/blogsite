@@ -46,6 +46,15 @@ def create_paginator(queryset, page_number, items=5):
     return paginator.get_page(page_number)
 
 
+# formのエラーメッセージをmessageフレームワークに送る処理
+def error_message(request, form_errors):
+    errors = form_errors.get_json_data().values()
+    for error in errors:
+        for e in error:
+            messages.error(request, e["message"])
+    return 0
+
+
 class IndexView(View):
     def get(self, request, *args, **kwargs):
         context = {}
@@ -150,7 +159,7 @@ class CreateArticleView(LoginRequiredMixin, View):
             print(form)
             form.save()
         else:
-            print(form.errors)
+            error_message(request, form.errors)
 
         return redirect("blog:index")
 
@@ -188,7 +197,7 @@ class ArticleView(View):
             print("通報完了")
             report_form.save()
         else:
-            print(report_form.errors)
+            error_message(request, report_form.errors)
 
         return redirect("blog:article", pk)
 
@@ -229,7 +238,7 @@ class ArticleEditView(LoginRequiredMixin, View):
         if form.is_valid():
             form.save()
         else:
-            print(form.errors)
+            error_message(request, form.errors)
 
         return redirect("blog:article", pk)
 
@@ -310,7 +319,7 @@ def create_notification(user, category_name, subject, content):
         notify_form.save()
         print("通知の作成が完了しました")
     else:
-        print(notify_form.errors)
+        error_message(request, notify_form.errors)
 
 
 class FollowView(LoginRequiredMixin, View):
@@ -352,7 +361,7 @@ class FollowView(LoginRequiredMixin, View):
                 print("フォローする")
                 follow_form.save()
             else:
-                print(follow_form.errors)
+                error_message(request, follow_form.errors)
 
             create_notification(
                 pk,
@@ -442,7 +451,7 @@ class BlockView(LoginRequiredMixin, View):
                     followed.delete()
                 form.save()
             else:
-                print(form.errors)
+                error_message(request, form.errors)
 
         return redirect("blog:userpage", pk=pk)
 
@@ -465,7 +474,7 @@ class GoodArticleView(LoginRequiredMixin, View):
             return redirect("blog:article", pk)
 
         if not good_form.is_valid():
-            print(good_form.errors)
+            error_message(request, good_form.errors)
         else:
             good_form.save()
 
@@ -549,9 +558,7 @@ class CommentView(View):
         comment_form = ArticleChatForm(copied)
 
         if not comment_form.is_valid():
-            errors = comment_form.errors.get_json_data()
-            for e in errors:
-                print(e)
+            error_message(request, comment_form.errors)
         else:
             comment_form.save()
             print("フォームの保存に成功しました")
@@ -580,7 +587,7 @@ class SettingsView(LoginRequiredMixin, View):
         form = CustomUserIsNotNotifyForm(request.POST)
 
         if not form.is_valid():
-            print(form.errors)
+            error_message(request, form.errrors)
 
             return redirect("blog:mypage")
 
@@ -608,9 +615,7 @@ class UploadUserImage(View):
         form = IconForm(request.POST, request.FILES, instance=request.user)
 
         if not form.is_valid():
-            errors = form.errors.get_json_data()
-            for e in errors:
-                messages.error(request, e)
+            error_message(request, form.errors)
         else:
             if old_image_path != None and os.path.exists(old_image_path):
                 os.remove(old_image_path)
@@ -641,7 +646,7 @@ class ChangeNameView(LoginRequiredMixin, View):
         form = CustomUserNameForm(request.POST, instance=request.user)
 
         if not form.is_valid():
-            print(form.errors)
+            error_message(request, form.errors)
         else:
             print(form.clean())
             form.save()

@@ -183,5 +183,11 @@ AUTHENTICATION_BACKENDS = (
     "social_core.backends.open_id.OpenIdAuth",
     "social_core.backends.google.GoogleOAuth2",
     "django.contrib.auth.backends.ModelBackend",
-    "django.contrib.auth.backends.ModelBackend",
 )
+
+MESSAGE_TAGS = {
+    messages.INFO: "alert alert-info",
+    messages.SUCCESS: "alert alert-info",
+    messages.WARNING: "alert alert-warning",
+    messages.ERROR: "alert alert-danger",
+}

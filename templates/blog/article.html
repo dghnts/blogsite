@@ -13,7 +13,7 @@
                     {% csrf_token %}
                     <input id="good_submit" type="submit" value="いいね" />
                 </form>
-                {% if request.user != article.user %}
+                {% if request.user.is_authenticated and request.user != article.user %}
                     <div class="article_menu_list">
                         <div class="good_area">
                             {% good_checked article request.user as flag%}
@@ -111,11 +111,11 @@
                     <a href="{% if request.user != article.user %}{% url 'blog:userpage' article.user.id %}{% else %}{% url 'blog:mypage' %}{% endif %}">{% get_username article.user %}</a>
                 </div>
             </div>
-            {% if request.user != article.user and request.user.is_authenticated %}
+            {% if request.user.is_authenticated and request.user != article.user %}
                 {% include "blog/buttons/follow_button.html" with follower_id=article.user.id%}
                 {% include "blog/buttons/block_button.html" with block_id=article.user.id%}
             {% endif %}
-            {% if request.user == article.user %}
+            {% if request.user.is_authenticated and request.user == article.user %}
             <div class="mb-2 w-100">
                 <a class="btn btn-success w-100" href="{% url 'blog:edit_article' article.id %}">編集</a>
             </div>
