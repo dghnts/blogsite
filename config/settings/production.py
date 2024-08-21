@@ -14,9 +14,9 @@ EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
 
 DEFAULT_FROM_EMAIL = "example@example.com"
 
-ALLOWED_HOSTS = ["std-blogsite.com"]
+ALLOWED_HOSTS = ["std-blog.com"]
 
-CSRF_TRUSTED_ORIGINS = ["https://std-blogsite.com"]
+CSRF_TRUSTED_ORIGINS = ["https://std-blog.com"]
 
 DATABASES = {
     "default": {
